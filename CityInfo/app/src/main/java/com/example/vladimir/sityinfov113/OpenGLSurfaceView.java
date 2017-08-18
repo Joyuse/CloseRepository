@@ -180,7 +180,7 @@ public class OpenGLSurfaceView extends GLSurfaceView {
                     //mScaleDetector.onTouchEvent(event);
                 }
                 //renderer.Rotate(angle);
-                renderer.angle = mode;
+                renderer.angle += mode;
                 mLastAngle = degrees;
                 break;
         }
@@ -192,7 +192,7 @@ public class OpenGLSurfaceView extends GLSurfaceView {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             mScaleFactor *= detector.getScaleFactor();
-            mScaleFactor = Math.max(2.0f, Math.min(mScaleFactor, 1500.0f));
+            mScaleFactor = Math.max(5.0f, Math.min(mScaleFactor, 1500.0f));
             renderer.eyeZ = mScaleFactor;
             //renderer.centerZ = -mScaleFactor;
             flag = 0;

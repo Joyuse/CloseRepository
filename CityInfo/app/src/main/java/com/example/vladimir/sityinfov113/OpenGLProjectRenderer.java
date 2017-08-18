@@ -18,21 +18,15 @@ import javax.microedition.khronos.opengles.GL10;
  */
 
 public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
+    //матрица модели
     private float[] mModelMatrix = new float[16];
+    //матрица вида
     private float[] mViewMatrix = new float[16];
+    //матрица проекции
     private float[] mProjectionMatrix = new float[16];
+    //результирующая матрица
     private float[] mMVPMatrix = new float[16];
-
-    /*
-    private final FloatBuffer mTriangle1Vertices;
-    private final FloatBuffer mTriangle2Vertices;
-    private final FloatBuffer mTriangle3Vertices;
-    private final FloatBuffer mTriangle4Vertices;
-    private final FloatBuffer mTriangle5Vertices;
-    private final FloatBuffer mTriangle6Vertices;
-    */
-
-
+    //вершинный буфер
     private final FloatBuffer verticesReady;
 
 
@@ -79,6 +73,76 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 -0.5f, 0.8f,0.0f,
                 1.0f, 1.0f, 1.0f, 0.0f,
 
+                //боковина Розовая
+                -0.5f, 0.8f,1.0f,
+                1.0f, 0.5f, 0.5f, 0.0f,
+
+                -0.5f, 0.8f,0.0f,
+                1.0f, 0.5f, 0.5f, 0.0f,
+
+                -0.9f, 0.2f,1.0f,
+                1.0f, 0.5f, 0.5f, 0.0f,
+
+                //боковниа серая
+                -0.9f, 0.2f,1.0f,
+                0.5f, 0.5f, 0.5f, 0.0f,
+
+                -0.9f, 0.2f,0.0f,
+                0.5f, 0.5f, 0.5f, 0.0f,
+
+                -0.5f, 0.8f,0.0f,
+                0.5f, 0.5f, 0.5f, 0.0f,
+
+                //боковина темно-зеленая
+                -0.9f, 0.2f,1.0f,
+                0.6f, 0.6f, 0.0f, 0.0f,
+
+                -0.9f, 0.2f,0.0f,
+                0.6f, 0.6f, 0.0f, 0.0f,
+
+                -0.9f, 0.8f,0.0f,
+                0.6f, 0.6f, 0.0f, 0.0f,
+
+                //Боковина тоже ярко зеленого цвета
+                -0.9f, 0.8f,1.0f,
+                0.2f, 0.8f, 0.0f, 0.0f,
+
+                -0.9f, 0.8f,0.0f,
+                0.2f, 0.8f, 0.0f, 0.0f,
+
+                -0.5f, 0.8f,0.0f,
+                0.2f, 0.8f, 0.0f, 0.0f,
+
+                //боковина хз какого цвета
+                -0.9f, 0.8f,1.0f,
+                0.3f, 0.8f, 0.0f, 0.0f,
+
+                -0.5f, 0.8f,0.0f,
+                0.3f, 0.8f, 0.5f, 0.0f,
+
+                -0.5f, 0.8f,1.0f,
+                0.3f, 0.8f, 0.5f, 0.0f,
+
+                //другая сторона синяя
+                -0.9f, 0.8f,1.0f,
+                0.1f, 0.4f, 0.7f, 0.0f,
+
+                -0.9f, 0.8f,0.0f,
+                0.1f, 0.4f, 0.5f, 0.0f,
+
+                -0.9f, 0.2f,1.0f,
+                0.1f, 0.4f, 0.7f, 0.0f,
+
+                //крыша в последнюю очередь
+                -0.9f, 0.8f, 1.0f,
+                1.0f, 0.5f, 1.0f, 0.0f,
+
+                -0.9f, 0.2f, 1.0f,
+                1.0f, 0.5f, 1.0f, 0.0f,
+
+                -0.5f, 0.8f, 1.0f,
+                1.0f, 0.5f, 1.0f, 0.0f,
+
                 // треугольник 2
                 -0.6f, 0.2f,0.0f,
                 0.34f, 1.0f, 1.0f, 0.0f,
@@ -119,30 +183,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 1.5f,-1.5f,0.0f,
                 0.34f, 0.5f, 0.5f, 0.0f,
 
-
-//                // треугольник 5
-//                1.1f, 1.8f, 0.0f,
-//                0.34f, 0.5f, 0.5f, 0.0f,
-//
-//                1.1f, 1.2f, 0.0f,
-//                0.34f, 0.5f, 0.5f, 0.0f,
-//
-//                1.5f, 1.8f, 0.0f,
-//                0.34f, 0.5f, 0.5f, 0.0f,
-//
-//                1.2f, 1.5f, 0.0f,
-//                0.34f, 0.5f, 0.5f, 0.0f,
-
-//
-//                // треугольник +6
-//                0.1f, 0.2f,0.0f,
-//
-//                0.5f, 0.2f,0.0f,
-//
-//                0.5f, 0.8f,0.0f,
-
-
-
         };
 
         verticesReady = ByteBuffer.allocateDirect(vertices.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -152,9 +192,7 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-       // Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
-
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         //Вершинный шейдер
         final String vertexShader =
                 "uniform mat4 u_MVPMatrix;      \n"
@@ -257,7 +295,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         mMVPMatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVPMatrix");
         mPositionHandle = GLES20.glGetAttribLocation(programHandle, "a_Position");
         mColorHandle = GLES20.glGetAttribLocation(programHandle, "a_Color");
-
         //Говорим программе что мы рендерим сцену
         GLES20.glUseProgram(programHandle);
     }
@@ -265,16 +302,15 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     // задаем ViewPort
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
-
         final float ratio = (float) width / height;
         final float left = -ratio;
         final float right = ratio;
         final float bottom = -1.0f;
-        final float top = 2.0f;
-        final float near = 2.0f;
+        final float top = 1.0f;
+        final float near = 1.0f;
         final float far = 150000.0f;
-
         Matrix.frustumM(mProjectionMatrix, 0, left, right, bottom, top, near, far);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
     }
 
     @Override
@@ -282,22 +318,28 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 glUnused) {
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
         Matrix.setIdentityM(mModelMatrix,0);
-
         OnMoveScene();
-        //Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
-        //Matrix.setLookAtM(mViewMatrix, 0, 0, 0, eyeZ, 0, 0, 0, 0, upY, 0);
         drawTriangle(verticesReady);
     }
 
     //Функция перемещения
     public  void OnMoveScene() {
         //Передвижение матрицы вверх,вниз,влево,вправо
-        Matrix.translateM(mModelMatrix,0,eyeX,0,0);
-        Matrix.translateM(mModelMatrix,0,0,eyeY,0);
+        //Matrix.translateM(mModelMatrix,0,-eyeX,-eyeY,0);
         //Вращение
-        Matrix.rotateM(mModelMatrix,0,angle,0,0,1);
+        //Matrix.rotateM(mModelMatrix,0,angle,0,0,1.0f);
         //Камера
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, eyeZ, 0, 0, 0, 0, upY, 0);
+        /*
+        матрица модели
+        private float[] mModelMatrix = new float[16];
+        матрица вида
+        private float[] mViewMatrix = new float[16];
+        матрица проекции
+        private float[] mProjectionMatrix = new float[16];
+        результирующая матрица
+        private float[] mMVPMatrix = new float[16];
+        */
+        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
     }
 
     //функция рисовки 3-ка
@@ -307,29 +349,19 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         aTriangleBuffer.position(mPositionOffset);
         GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, aTriangleBuffer);
-
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-
         // информация о цвете
         aTriangleBuffer.position(mColorOffset);
         GLES20.glVertexAttribPointer(mColorHandle, mColorDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, aTriangleBuffer);
-
         GLES20.glEnableVertexAttribArray(mColorHandle);
-
         // перемножение матриц, результат в MVP матрице
         Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-
         // задаем modelView
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-
         //Вырисовываем 3-к
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 12);
-
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 12, 4);
-
-        //GLES20.glDrawArrays(GLES20.GL_LINES,16,2);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 33);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 33, 4);
     }
 }
