@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
+import javax.microedition.khronos.opengles.GL;
+
 
 public class OpenGLSurfaceView extends GLSurfaceView {
 
@@ -114,12 +116,14 @@ public class OpenGLSurfaceView extends GLSurfaceView {
                     final float dy = y - mLastTouchY;
 
 //                    //Направление камеры
-                    renderer.lookX += -dx / 256;
-                    renderer.lookY += dy / 256;
+                    renderer.lookX += -dx;// / 256;
+                    renderer.lookY += dy; /// 256;
 //                    //Координаты положения камеры
-                    renderer.eyeX += -dx / 256;
-                    renderer.eyeY += dy / 256;
+                    renderer.eyeX += -dx;// / 256;
+                    renderer.eyeY += dy; /// 256;
 
+
+                    renderer.tryItAgainUcanDoThisShitMathaFacka(x,y);
                     //renderer.Move(dy / 256, dx / 256);
                     //Посление касание
                     mLastTouchX = x;

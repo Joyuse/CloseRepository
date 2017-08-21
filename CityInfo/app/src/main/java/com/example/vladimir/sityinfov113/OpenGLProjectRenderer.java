@@ -4,11 +4,17 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.renderscript.Matrix4f;
 import android.transition.Scene;
-
+import android.opengl.GLU;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import java.util.Vector;
+
+
+import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -26,9 +32,9 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     private float[] mProjectionMatrix = new float[16];
     //результирующая матрица
     private float[] mMVPMatrix = new float[16];
+
     //вершинный буфер
     private final FloatBuffer verticesReady;
-
 
     private int mMVPMatrixHandle;
     private int mPositionHandle;
@@ -42,20 +48,23 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     private float x;
     private Context context;
 
-
+    public float left;
+    public float right;
     float eyeX = 0.0f;
     float eyeY = 0.0f;
     float eyeZ = 5;
-
     float lookX = 0.0f;
     float lookY = 0.0f;
     float lookZ = -5.0f;
-
     float upX = 0.0f;
     float upY = 1.0f;
     float upZ = 0.0f;
-
     float angle = 1.0f;
+
+    //W and H
+    int wHeight;
+    int wWidth;
+
 
     public OpenGLProjectRenderer() {
 
@@ -215,7 +224,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                         + "   gl_FragColor = v_Color;     \n"
                         + "}                              \n";
 
-
         //считыватель шейдера вершинного
         int vertexShaderHandle = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
         //создание вершинного шейдера
@@ -243,6 +251,7 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
         //считывание фрагментного шейдера
         int fragmentShaderHandle = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
+
         //создание фрагментного шейдера
         if (fragmentShaderHandle != 0)
         {
@@ -298,11 +307,15 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         //Говорим программе что мы рендерим сцену
         GLES20.glUseProgram(programHandle);
     }
+
     @Override
     // задаем ViewPort
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
+        //Первый вариант
         GLES20.glViewport(0, 0, width, height);
         final float ratio = (float) width / height;
+        wHeight = height;
+        wWidth = width;
         final float left = -ratio;
         final float right = ratio;
         final float bottom = -1.0f;
@@ -310,7 +323,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         final float near = 1.0f;
         final float far = 150000.0f;
         Matrix.frustumM(mProjectionMatrix, 0, left, right, bottom, top, near, far);
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
     }
 
     @Override
@@ -324,22 +336,7 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
     //Функция перемещения
     public  void OnMoveScene() {
-        //Передвижение матрицы вверх,вниз,влево,вправо
-        //Matrix.translateM(mModelMatrix,0,-eyeX,-eyeY,0);
-        //Вращение
-        //Matrix.rotateM(mModelMatrix,0,angle,0,0,1.0f);
-        //Камера
-        /*
-        матрица модели
-        private float[] mModelMatrix = new float[16];
-        матрица вида
-        private float[] mViewMatrix = new float[16];
-        матрица проекции
-        private float[] mProjectionMatrix = new float[16];
-        результирующая матрица
-        private float[] mMVPMatrix = new float[16];
-        */
-        Matrix.setLookAtM(mViewMatrix, 0, eyeX, eyeY, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
+        Matrix.setLookAtM(mViewMatrix, 0, eyeX/wHeight, eyeY/wWidth, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
     }
 
     //функция рисовки 3-ка
@@ -350,18 +347,34 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, aTriangleBuffer);
         GLES20.glEnableVertexAttribArray(mPositionHandle);
+
         // информация о цвете
         aTriangleBuffer.position(mColorOffset);
         GLES20.glVertexAttribPointer(mColorHandle, mColorDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, aTriangleBuffer);
         GLES20.glEnableVertexAttribArray(mColorHandle);
-        // перемножение матриц, результат в MVP матрице
-        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-        // задаем modelView
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
+
+        //перемножение матриц
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
+
         //Вырисовываем 3-к
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 33);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 33, 4);
+    }
+
+    public void tryItAgainUcanDoThisShitMathaFacka(float x,float y)
+    {
+
+        float winX,winY;
+        winX = x;
+        winY = y;
+        Log.v("Windows Koords","winX = " + winX);
+        Log.v("Windows Koords","winY = " + winY);
+
+        Log.v("Window Width","wWidth = " + wWidth);
+        Log.v("Window Height","wHeight = " + wHeight);
+
+        int[] viewport = {0, 0, wWidth, wHeight};
     }
 }

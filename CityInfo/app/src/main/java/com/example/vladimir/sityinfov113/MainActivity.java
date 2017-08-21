@@ -16,7 +16,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         glSurfaceView = new GLSurfaceView(this);
 
         // Проверяем поддерживается ли OpenGL ES 2.0.
