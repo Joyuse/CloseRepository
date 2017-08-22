@@ -66,7 +66,11 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     int wWidth;
 
 
+    private Context m_Context;
+
     public OpenGLProjectRenderer() {
+
+        m_Context = context;
 
         float[] vertices = {
                 //Координаты XYZ
@@ -193,6 +197,8 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 0.34f, 0.5f, 0.5f, 0.0f,
 
         };
+
+
 
         verticesReady = ByteBuffer.allocateDirect(vertices.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
         verticesReady.put(vertices).position(0);
@@ -377,4 +383,5 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
         int[] viewport = {0, 0, wWidth, wHeight};
     }
+
 }
