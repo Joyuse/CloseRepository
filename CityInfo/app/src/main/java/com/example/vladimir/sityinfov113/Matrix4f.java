@@ -2,6 +2,7 @@ package com.example.vladimir.sityinfov113;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 /**
  * Created by Vladimir on 22.08.2017.
@@ -13,6 +14,10 @@ public class Matrix4f {
     public Matrix4f(){}
     public Matrix4f(Matrix4f other){ this.values = other.values; }
 
+    public Vector4f mult(Vector3f position){
+        return this.mult(new Vector4f(position,1.0f));
+    }
+
     public Vector4f mult(Vector4f vector){
         Vector4f res = new Vector4f();
         Matrix.multiplyMV(res.values,0,this.values,0,vector.values,0);
@@ -22,7 +27,7 @@ public class Matrix4f {
     public Matrix4f mult(Matrix4f mat){
         Matrix4f res = new Matrix4f();
         Matrix.multiplyMM(res.values,0,this.values,0,mat.values,0);
-        return  res;
+        return res;
     }
 
     public void setPerspective(float fovy, float aspect, float near, float far){
@@ -34,6 +39,7 @@ public class Matrix4f {
     }
 
     public void setViewport(int w, int h){
+
         float w2 = w / 2;
         float h2 = h / 2;
         this.setColumn(0,w2,0.0f,0.0f,0.0f);
@@ -47,6 +53,7 @@ public class Matrix4f {
     }
 
     public void setColumn(int column, float x, float y, float z, float w){
+
         int offset = column * 4;
         this.values[offset] = x;
         this.values[offset + 1] = y;
@@ -68,7 +75,7 @@ public class Matrix4f {
 
 
     public Matrix4f inverted(){
-        Matrix4f res = new Matrix4f(this);
+        Matrix4f res = new Matrix4f();
         Matrix.invertM(res.values,0,this.values,0);
         return  res;
     }
@@ -77,5 +84,14 @@ public class Matrix4f {
     Vector4f getColumn(int column){
         int offset = column * 4;
         return new Vector4f(values[offset],values[offset + 1], values[offset + 2], values[offset + 3]);
+    }
+
+    String debug(){
+        String res = new String();
+        res += "row 0 " + getColumn(0).debug() + "\n";
+        res += "row 1 " + getColumn(1).debug() + "\n";
+        res += "row 2 " + getColumn(2).debug() + "\n";
+        res += "row 3 " + getColumn(3).debug() + "\n";
+        return  res;
     }
 }

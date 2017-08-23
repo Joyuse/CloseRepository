@@ -1,96 +1,117 @@
 package com.example.vladimir.sityinfov113;
 
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.opengl.GLES20;
-import android.opengl.Matrix;
-
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4d;
-import javax.vecmath.Matrix4f;
-
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-
-import java.util.Vector;
+import android.util.Log;
 
 /**
  * Created by Vladimir on 18.08.2017.
  */
 
 
-
 public class Camera {
-    private float[] myViewMatrix = new float[16];
-    private float[] myProjectionMatrix = new float[16];
-    private float[] myViewPortMatrix = new float[16];
-    private float[] myViewProjectionMatrix = new float [16];
-    /**позиции камеры**/
 
-    /**центер*/
-    private final float[] center = {0, 0f, 0f};
-    /**глаз*/
-    private final float[] eye = {0, 0f, 5f};
-    /**up-vector*/
-    private final float[] up = {0, 1f, 0f};
+    int width,height;
+    boolean is_need_update_mvp=true;
 
-    int w,h;
-    float nearp = 1.0f;
-    float farp = 150000.0f;
+    Vector3f rotation_point;
+    Vector3f eye = new Vector3f(0.0f,0.0f,100.0f);
+    Vector3f center = new Vector3f(0.0f,0.0f,0.0f);
+    Vector3f up = new Vector3f(0.0f,1.0f,0.0f);
 
-    public void setViewport(int x, int y, int w, int h)
+    Matrix4f projection_matrix = new Matrix4f();
+    Matrix4f view_matrix = new Matrix4f();
+
+    Matrix4f view_projection_matrix;
+    Matrix4f view_projection_matrix_inv;
+
+    //setters
+    public void setViewport(int w, int h)
     {
+        width = w;
+        height = h;
+        Matrix4f scalem = new Matrix4f();
+        scalem.setToIndentity();
+        scalem.scale(-1,1,1);
 
+        projection_matrix.setPerspective(45,(float)w / h,1.0f, 100.0f);
+        projection_matrix = scalem.mult(projection_matrix);
+        needUpdateMatrix();
     }
 
-
-    public void  unproject(int x,int y,int z){
-        Vector4d v4 = new Vector4d(x,h-y,2.0f*z-1.0f,1.0f);
-//        Vector4d res = myViewMatrix() * v4;
-//        res /= w;
+    public void translate(float x, float y){
+        eye.setSum(x,y);
+        center.setSum(x,y);
+        needUpdateMatrix();
     }
 
-    private void project(Vector3d pos)
+    public void zoom(float distance){
+        eye.setZ(eye.z() + distance);
+        needUpdateMatrix();
+    }
+
+    public void setRotationPoint(Vector3f pos){
+        rotation_point = pos;
+    }
+
+    public void rotate(float fovy){
+        Matrix4f rotm = new Matrix4f();
+        rotm.setToIndentity();
+        rotm.translate(rotation_point.x(), rotation_point.y(), rotation_point.z());
+        rotm.rotate(fovy,0,0,1.0f);
+        rotm.translate(-rotation_point.x(), -rotation_point.y(), -rotation_point.z());
+        eye = rotm.mult(eye).toAffine();
+        center = rotm.mult(center).toAffine();
+        up = rotm.mult(new Vector4f(up.x(), up.y(), up.z(), 0.0f)).toAffine();
+        needUpdateMatrix();
+    }
+
+    public Vector3f unprojectPlane(float x, float y)
     {
-        Vector4d res;
-        Matrix.multiplyMM(myViewProjectionMatrix,0,myViewMatrix,0,myProjectionMatrix,0);
-// Matrix.multiplyMV();
-        //Vector4d res = getViewProjectionMatrix() * pos;
- //return Point(res.x,h - res.y);
+        Vector3f near = unproject(x,y,0f);
+        Vector3f far = unproject(x,y,1f);
+        Log.e("NEAR",near.debug());
+        Log.e("FAR",far.debug());
+        Log.e("END","END");
+        Vector3f ray = far.dif(near);
+        float dif = -near.z() / ray.z();
+        return  near.plus(ray.mult(dif));
     }
 
-    public void getViewProjectionMatrix () {
-
-        return;
-    }
-/**
-    public void setViewport (int x1, int y1, int w, int h){
-        GLES20.glViewport(x1,y1,w,h);
-        RectF viewport = new RectF(x1, y1, w, h);
-        //viewport = new int [] {x1,y1,w,h};
-        float w2 = (float)w / 2;
-        float h2 = (float)h / 2;
-        Matrix.setIdentityM(myViewPortMatrix,0);
-        myViewPortMatrix = new float[]{w2, 0, 0, 0,
-                                        0, h2, 0, 0,
-                                        0, 0, 1, 0,
-                                        w2, h2, 0, 0};
-    }
-**/
-    public void updateProjectionMatrix() {
-        Matrix.setIdentityM(myProjectionMatrix,0);
-        //инвентируем по Х
-        Matrix.scaleM(myProjectionMatrix,0,-1,1,1);
-        float aspectratio = w/h;
-        Matrix.perspectiveM(myProjectionMatrix,0,45,aspectratio,nearp,farp);
+    //calc functions
+    public Vector3f unproject(float x,float y,float z)
+    {
+        Vector4f res = new Vector4f(x / width * 2f - 1f, (height - y) / height * 2f - 1f, 2f * z - 1f, 1f);
+        res = getViewProjectionMatrixInv().mult(res);
+        return  res.toAffine();
     }
 
-    public Camera(int width,int height){
-        float aspect = (float) width / height;
-        GLES20.glViewport(0, 0, width, height);
-        Matrix.setLookAtM(myViewMatrix, 0 , eye[0], eye[1], eye[2], center[0], center[1], center[2], up[0],up[1],up[2]);
-        Matrix.frustumM(myProjectionMatrix, 0, -aspect, aspect, -1, 1, 4, 7);
+    public Point project(Vector3f position) //incorrect
+    {
+        Vector4f pr = getViewProjectionMatrix().mult(position);
+        return new Point((int)pr.x(), height - (int)pr.y());
     }
+
+    //getters
+    public Matrix4f getViewProjectionMatrix () {
+        if(is_need_update_mvp) updateViewProjectionViewportMatrix();
+        return view_projection_matrix;
+    }
+
+    public Matrix4f getViewProjectionMatrixInv(){
+        if(is_need_update_mvp) updateViewProjectionViewportMatrix();
+        return view_projection_matrix_inv;
+    }
+
+    //private
+    void needUpdateMatrix(){
+        is_need_update_mvp = true;
+    }
+
+    void updateViewProjectionViewportMatrix(){
+        view_matrix.setLookAt(eye,center,up);
+        view_projection_matrix = projection_matrix.mult(view_matrix);
+        view_projection_matrix_inv = view_projection_matrix.inverted();
+        is_need_update_mvp = false;
+    }
+
 }

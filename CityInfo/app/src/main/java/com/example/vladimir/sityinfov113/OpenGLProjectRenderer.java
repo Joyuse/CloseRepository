@@ -1,77 +1,47 @@
 package com.example.vladimir.sityinfov113;
 
-import android.content.Context;
+import android.opengl.GLES10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.opengl.Matrix;
-import android.renderscript.Matrix4f;
-import android.transition.Scene;
-import android.opengl.GLU;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-
-import java.util.Vector;
 
 
 import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL10Ext;
 
 /**
  * Created by Vladimir on 16.08.2017.
  */
 
 public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
-    //матрица модели
-    private float[] mModelMatrix = new float[16];
-    //матрица вида
-    private float[] mViewMatrix = new float[16];
-    //матрица проекции
-    private float[] mProjectionMatrix = new float[16];
-    //результирующая матрица
-    private float[] mMVPMatrix = new float[16];
 
     //вершинный буфер
-    private final FloatBuffer verticesReady;
+    final FloatBuffer verticesReady;
 
-    private int mMVPMatrixHandle;
-    private int mPositionHandle;
-    private int mColorHandle;
-    private final int mBytesPerFloat = 4;
-    private final int mStrideBytes = 7 * mBytesPerFloat;
-    private final int mPositionOffset = 0;
-    private final int mPositionDataSize = 3;
-    private final int mColorOffset = 3;
-    private final int mColorDataSize = 4;
-    private float x;
-    private Context context;
-
-    public float left;
-    public float right;
-    float eyeX = 0.0f;
-    float eyeY = 0.0f;
-    float eyeZ = 5;
-    float lookX = 0.0f;
-    float lookY = 0.0f;
-    float lookZ = -5.0f;
-    float upX = 0.0f;
-    float upY = 1.0f;
-    float upZ = 0.0f;
-    float angle = 1.0f;
-
-    //W and H
-    int wHeight;
-    int wWidth;
+    int colored_vertices_program_handle;
+    int MVPmatrix_location;
+    int mPositionHandle;
+    int mColorHandle;
+    final int mBytesPerFloat = 4;
+    final int mStrideBytes = 7 * mBytesPerFloat;
+    final int mPositionOffset = 0;
+    final int mPositionDataSize = 3;
+    final int mColorOffset = 3;
+    final int mColorDataSize = 4;
 
 
-    private Context m_Context;
+    public Camera camera = new Camera();
+
+
+    FloatBuffer test_vertices;
 
     public OpenGLProjectRenderer() {
-
-        m_Context = context;
-
         float[] vertices = {
                 //Координаты XYZ
                 //ЦВЕТ RGB
@@ -198,7 +168,15 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
         };
 
+        float[] test={
+            0f,0f,0f,
+            1f, 1f, 1f, 1f,
+            1f,1f,0f,
+            1f, 0f, 0f,1f
+        };
 
+        test_vertices = ByteBuffer.allocateDirect(test.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        test_vertices.put(test).position(0);
 
         verticesReady = ByteBuffer.allocateDirect(vertices.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
         verticesReady.put(vertices).position(0);
@@ -280,73 +258,67 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         }
 
         //Создание программы из шейдеров
-        int programHandle = GLES20.glCreateProgram();
+        colored_vertices_program_handle = GLES20.glCreateProgram();
 
-        if (programHandle != 0)
+        if (colored_vertices_program_handle != 0)
         {
-            GLES20.glAttachShader(programHandle, vertexShaderHandle);
-            GLES20.glAttachShader(programHandle, fragmentShaderHandle);
-            GLES20.glBindAttribLocation(programHandle, 0, "a_Position");
-            GLES20.glBindAttribLocation(programHandle, 1, "a_Color");
-            GLES20.glLinkProgram(programHandle);
+            GLES20.glAttachShader(colored_vertices_program_handle, vertexShaderHandle);
+            GLES20.glAttachShader(colored_vertices_program_handle, fragmentShaderHandle);
+            GLES20.glBindAttribLocation(colored_vertices_program_handle, 0, "a_Position");
+            GLES20.glBindAttribLocation(colored_vertices_program_handle, 1, "a_Color");
+            GLES20.glLinkProgram(colored_vertices_program_handle);
 
             final int[] linkStatus = new int[1];
-            GLES20.glGetProgramiv(programHandle, GLES20.GL_LINK_STATUS, linkStatus, 0);
+            GLES20.glGetProgramiv(colored_vertices_program_handle, GLES20.GL_LINK_STATUS, linkStatus, 0);
 
             if (linkStatus[0] == 0)
             {
-                GLES20.glDeleteProgram(programHandle);
-                programHandle = 0;
+                GLES20.glDeleteProgram(colored_vertices_program_handle);
+                colored_vertices_program_handle = 0;
             }
         }
 
         //Проверка на ошибку создания программы
-        if (programHandle == 0)
+        if (colored_vertices_program_handle == 0)
         {
             throw new RuntimeException("Error creating program.");
         }
 
         //создание матрицы, позиции, и цвета
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(programHandle, "u_MVPMatrix");
-        mPositionHandle = GLES20.glGetAttribLocation(programHandle, "a_Position");
-        mColorHandle = GLES20.glGetAttribLocation(programHandle, "a_Color");
+        MVPmatrix_location = GLES20.glGetUniformLocation(colored_vertices_program_handle, "u_MVPMatrix");
+        mPositionHandle = GLES20.glGetAttribLocation(colored_vertices_program_handle, "a_Position");
+        mColorHandle = GLES20.glGetAttribLocation(colored_vertices_program_handle, "a_Color");
+
+        GLES20.glDisable(GLES20.GL_CULL_FACE);
         //Говорим программе что мы рендерим сцену
-        GLES20.glUseProgram(programHandle);
     }
 
     @Override
     // задаем ViewPort
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
         //Первый вариант
-        GLES20.glViewport(0, 0, width, height);
-        final float ratio = (float) width / height;
-        wHeight = height;
-        wWidth = width;
-        final float left = -ratio;
-        final float right = ratio;
-        final float bottom = -1.0f;
-        final float top = 1.0f;
-        final float near = 1.0f;
-        final float far = 150000.0f;
-        Matrix.frustumM(mProjectionMatrix, 0, left, right, bottom, top, near, far);
+        camera.setViewport(width,height);
     }
 
+    boolean one_time=false;
     @Override
     // рисуем
     public void onDrawFrame(GL10 glUnused) {
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-        Matrix.setIdentityM(mModelMatrix,0);
-        OnMoveScene();
-        drawTriangle(verticesReady);
-    }
 
-    //Функция перемещения
-    public  void OnMoveScene() {
-        Matrix.setLookAtM(mViewMatrix, 0, eyeX/wHeight, eyeY/wWidth, eyeZ, lookX, lookY, lookZ, upX, upY, upZ);
+        GLES20.glUseProgram(colored_vertices_program_handle);
+        GLES20.glUniformMatrix4fv(MVPmatrix_location, 1, false,camera.getViewProjectionMatrix().values, 0);
+        drawColoredPoints(verticesReady, GLES20.GL_TRIANGLES, 0,30);
+
+//        if(!one_time) {
+//            Log.w("F",camera.getViewProjectionMatrix().debug());
+//            one_time = true;
+//        }
+//        camera.translate(0.001f,0.0f);
     }
 
     //функция рисовки 3-ка
-    private void drawTriangle(final FloatBuffer aTriangleBuffer)
+    private void drawColoredPoints(final FloatBuffer aTriangleBuffer, int render_type, int offset, int count)
     {
         // информация о позиции
         aTriangleBuffer.position(mPositionOffset);
@@ -360,28 +332,8 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 mStrideBytes, aTriangleBuffer);
         GLES20.glEnableVertexAttribArray(mColorHandle);
 
-        //перемножение матриц
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-
         //Вырисовываем 3-к
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 33);
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 33, 4);
-    }
-
-    public void tryItAgainUcanDoThisShitMathaFacka(float x,float y)
-    {
-
-        float winX,winY;
-        winX = x;
-        winY = y;
-        Log.v("Windows Koords","winX = " + winX);
-        Log.v("Windows Koords","winY = " + winY);
-
-        Log.v("Window Width","wWidth = " + wWidth);
-        Log.v("Window Height","wHeight = " + wHeight);
-
-        int[] viewport = {0, 0, wWidth, wHeight};
+        GLES20.glDrawArrays(render_type, offset, count);
     }
 
 }
