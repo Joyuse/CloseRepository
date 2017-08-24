@@ -1,8 +1,6 @@
 package com.example.vladimir.sityinfov113;
 
-import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
 /**
  * Created by Vladimir on 22.08.2017.

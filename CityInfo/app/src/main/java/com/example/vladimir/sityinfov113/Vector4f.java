@@ -1,7 +1,5 @@
 package com.example.vladimir.sityinfov113;
 
-import android.util.Log;
-
 /**
  * Created by Vladimir on 22.08.2017.
  */
@@ -28,7 +26,8 @@ public class Vector4f
     public void setZ(float z){ values[2] = z; }
     public void setW(float w){ values[3] = w; }
 
-    public Vector3f toAffine(){ return  new Vector3f(x() / w(), y() / w(), z() /w()); }
+    public Vector3f toVector3f(){ return  new Vector3f(x(), y(), z()); }
+    public Vector3f toAffine(){ return (w() != 0) ?  new Vector3f(x() / w(), y() / w(), z() /w()) : new Vector3f(x(),y(),z()); }
 
     String debug(){
         String res = new String();

@@ -11,32 +11,41 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 
 
 public class OpenGLSurfaceView extends GLSurfaceView implements View.OnClickListener {
-    private ScaleGestureDetector scale_gesture;
     private GestureDetector move_gesture;
 
 
     OpenGLProjectRenderer renderer;
-    int flag =0; //для проверки
-    private PointF last_point;
-    private Vector3f last_world_pos;
 
-    //специально для углов
-    public OpenGLSurfaceView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.requestFocus();
-        this.setFocusableInTouchMode(true);
-        scale_gesture = new ScaleGestureDetector(context, new ScaleListener());
-        move_gesture = new GestureDetector(context,new MoveListener());
+    private class PointerState {
+        int index;
+        boolean need_update=true;
+        Vector3f world = new Vector3f();
+        PointF screen = new PointF();
     }
 
-    public void setMyCustomRenderer(OpenGLProjectRenderer r){
-        setRenderer(r);
-        this.renderer = r; // вроде должно работать для всех, но не факт, я не проверял:D
+    private PointerState rotation_point;
+    private PointerState rotation_stable_point;
+    private PointerState last_coords[] = new PointerState[3];
+
+
+    //специально для углов
+    public OpenGLSurfaceView(Context context, AttributeSet attrs){
+        super(context, attrs);
+        for(int i=0; i < 3; i++){
+            last_coords[i] = new PointerState();
+            last_coords[i].index = i;
+        }
+        this.requestFocus();
+        this.setFocusableInTouchMode(true);
+        move_gesture = new GestureDetector(context,new MoveListener());
+
+        Matrix4f matrix = new Matrix4f();
+        matrix.setLookAt(new Vector3f(-2.0590067f,-0.23856598f,30.0f), new Vector3f(-2.0590067f,-0.23856598f,0.0f), new Vector3f(0.36845762f,0.9296446f,0.0f));
+        Log.w("W", matrix.debug());
     }
 
     //Работкает :3
@@ -46,102 +55,14 @@ public class OpenGLSurfaceView extends GLSurfaceView implements View.OnClickList
         this.renderer = (OpenGLProjectRenderer)r; // Если буду использовать только OpenGLRenderer, иначе -> исключения
     }
 
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(move_gesture.onTouchEvent(event))
-            Log.e("Gesture res", "Move ok");
-        else if(scale_gesture.onTouchEvent(event))
-            Log.e("Gesture res", "Scale ok");
-//        //событие
-//        int action = event.getAction();
-//
-//        if (action == MotionEvent.ACTION_DOWN) {
-//            final float x = event.getX();   //(NEW)
-//            final float y = event.getY();   //(NEW)
-//            last_point.set(x,y);    //(NEW)
-//            flag =0;
-//
-//            last_world_pos = renderer.camera.unprojectPlane(last_point.x,last_point.y);
-//
-////            GLU.gluUnProject(mLastTouchX,mLastTouchY)
-//
-//            return true;
-//        }
-//
-//        switch (event.getPointerCount()) {
-//            case 3:
-//                //3 пальца
-//                //Log.e("Event", "Пальцев = " +event.getPointerCount());
-//                return scale_gesture.onTouchEvent(event);
-//            case 2:
-//                //2 пальца
-//                //Log.e("Event", "Пальцев = " +event.getPointerCount());
-//                return doRotationEvent(event);
-//            case 1:
-//                //1 палец
-//                Log.e("Event", "Пальцев = " +event.getPointerCount());
-//                return doMoveEvent(event);
-//        }
-        return true;
-    }
-
-    //Передвижение
-    private boolean doMoveEvent(MotionEvent event)
-    {
-        final int action = event.getAction();
-        //Пока идет действие
-        switch (action) {
-            //Если Дейсвтие - движение
-            case MotionEvent.ACTION_MOVE: {
-                flag ++;
-                if (flag > 4) {
-                    //Считываем координаты пальца
-                    final float x = event.getX();
-                    final float y = event.getY();
-                    Vector3f dif = last_world_pos.dif(renderer.camera.unprojectPlane(last_point.x,last_point.y));
-                    renderer.camera.translate(dif.x(), dif.y());
-                    last_world_pos = renderer.camera.unprojectPlane(last_point.x,last_point.y);
-                    //Посление касание
-                    last_point.set(x,y);
-                }
-                break;
-            }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                flag = 0;
-                break;
+        if(event.getActionMasked() == MotionEvent.ACTION_POINTER_UP)
+        {
+            for(PointerState state: last_coords)
+                state.need_update = true;
         }
-        return true;
-    }
-
-    //Повороты
-    private boolean doRotationEvent(MotionEvent event) {
-        //расчитываем угол менжду двумя пальцами
-        float deltaX = event.getX(1) - event.getX(0);
-        float deltaY = event.getY(1) - event.getY(0);
-        switch (event.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                flag = 0;
-                break;
-            case MotionEvent.ACTION_POINTER_UP: //Если поднят палец №2
-                flag = 0;
-                break;
-            case MotionEvent.ACTION_UP: //Если поднят палец №1
-                flag = 0;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                flag ++;
-                double radians = Math.atan(deltaY / deltaX);
-
-                if (flag >10) {
-
-                }
-                break;
-        }
-        return true;
+        return move_gesture.onTouchEvent(event);
     }
 
     @Override
@@ -149,26 +70,41 @@ public class OpenGLSurfaceView extends GLSurfaceView implements View.OnClickList
         Log.w("event","onClick " + view);
     }
 
-    //Отдаляет по Z
+
     private class MoveListener extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onContextClick(MotionEvent e) {
+            Log.w("event","onContextClick");
+            return  true;
+        }
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Log.w("event","onSingleTapUp");
+            return  true;
+        }
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-            Log.w("event","release");
+            Log.w("event","event release");
             return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e){
         }
 
         @Override
         public boolean onDoubleTap(MotionEvent motionEvent) {
             Log.w("event","double click");
-
             return true;
         }
 
-//        @Override
-//        public boolean onDoubleTapEvent(MotionEvent motionEvent) {
-//            return true;
-//        }
+        @Override
+        public boolean onDown(MotionEvent motionEvent) {
+            rotation_stable_point = null;
+            updateLastCoords(0,motionEvent);
+            return true;
+        }
 
 
         @Override
@@ -178,29 +114,104 @@ public class OpenGLSurfaceView extends GLSurfaceView implements View.OnClickList
 
         @Override
         public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-            if(motionEvent1.getPointerCount() > 1)
-                return false;
-            else{
-                Log.w("event","move event " + motionEvent1.getPointerCount());
-                //move event
-                return true;
+            boolean res=true;
+            final int ROTATE_PER_0 = 0x1;
+            final int ROTATE_PER_1 = 0x2;
+
+            switch (motionEvent1.getPointerCount()) {
+                    case 1:
+                        if(!last_coords[0].need_update) {
+                            final float x = motionEvent1.getX();
+                            final float y = motionEvent1.getY();
+                            Vector3f dif = last_coords[0].world.sub(renderer.camera.unprojectPlane(x, y));
+                            renderer.camera.translate(dif.x(), dif.y());
+                        }
+                        updateLastCoords(0, motionEvent1);
+                        break;
+                    case 2:
+                        if(!last_coords[1].need_update){
+                            PointF dif[] = new PointF[]{getScreenPositionOffset(0, motionEvent1), getScreenPositionOffset(1, motionEvent1)};
+
+                            int rotation_mask = 0;
+                            float whs = renderer.camera.height + renderer.camera.width;
+                            rotation_mask |= ((dif[1].length() / whs) > 0.01) ? ROTATE_PER_1 : 0;
+                            rotation_mask |= ((dif[0].length() / whs) > 0.01) ? ROTATE_PER_0 : 0;
+
+                            switch (rotation_mask){
+                                case  ROTATE_PER_0:
+                                    if(rotation_stable_point != last_coords[1]) {
+                                        rotation_stable_point = last_coords[1];
+                                        rotation_point = last_coords[0];
+                                    }
+                                    break;
+                                case  ROTATE_PER_1:
+                                    if(rotation_stable_point != last_coords[0]) {
+                                        rotation_stable_point = last_coords[0];
+                                        rotation_point = last_coords[1];
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                            Log.w("W", "innoDB " + rotation_mask + " " + dif[1].length() + " " + dif[0].length());
+
+                            if(rotation_stable_point != null) {
+                                renderer.camera.setRotationPoint(rotation_stable_point.world);
+                                int rindex = rotation_point.index;
+                                int rsindex = rotation_stable_point.index;
+                                Vector3f rsPoint = last_coords[rsindex].world;
+                                Vector3f now = renderer.camera.unprojectPlane(motionEvent1.getX(rindex), motionEvent1.getY(rindex));
+                                Vector3f before = last_coords[rindex].world;
+                                float angle = angleBtwLines(
+                                        now.x(), now.y(), rsPoint.x(), rsPoint.y(),
+                                        before.x(), before.y(), rsPoint.x(), rsPoint.y()
+                                );
+
+                                renderer.camera.rotate(-angle);
+                            }
+                            else return true;
+                        }
+                        updateLastCoords(0,motionEvent1);
+                        updateLastCoords(1,motionEvent1);
+                        break;
+                    case 3:
+                        break;
+                    default: res = false;
+                        break;
             }
+            return  res;
         }
 
         @Override
         public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-            Log.w("event","move event release");
+            Log.e("W", "onRelease");
+
             //release move event
             return false;
         }
-    }
-    //Отдаляет по Z
-    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            renderer.camera.zoom(detector.getScaleFactor());
-            Log.w("event","scale");
-            return false;
+
+        private float angleBtwLines (float fx1, float fy1, float fx2, float fy2, float sx1, float sy1, float sx2, float sy2){
+            float angle1 = (float) Math.atan2(fy1 - fy2, fx1 - fx2);
+            float angle2 = (float) Math.atan2(sy1 - sy2, sx1 - sx2);
+            return (float) Math.toDegrees((angle1-angle2));
         }
+
+        private PointF getScreenPositionOffset(int index, MotionEvent event){
+            return  new PointF(event.getX(index) - last_coords[index].screen.x, event.getY(index) - last_coords[index].screen.y);
+        }
+
+        private void updateLastScreenPosition(int index, MotionEvent event){
+            last_coords[index].screen = new PointF(event.getX(index), event.getY(index));
+        }
+        private void updateLastWorldPosition(int index, MotionEvent event){
+            last_coords[index].world = renderer.camera.unprojectPlane(event.getX(index),event.getY(index));
+            last_coords[index].need_update = false;
+        }
+
+        private void updateLastCoords(int index, MotionEvent event){
+            updateLastScreenPosition(index, event);
+            updateLastWorldPosition(index, event);
+        }
+
     }
 }

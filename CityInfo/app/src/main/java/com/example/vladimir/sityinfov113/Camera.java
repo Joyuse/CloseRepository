@@ -1,7 +1,6 @@
 package com.example.vladimir.sityinfov113;
 
 import android.graphics.Point;
-import android.util.Log;
 
 /**
  * Created by Vladimir on 18.08.2017.
@@ -33,14 +32,15 @@ public class Camera {
         scalem.setToIndentity();
         scalem.scale(-1,1,1);
 
-        projection_matrix.setPerspective(45,(float)w / h,1.0f, 100.0f);
+        projection_matrix.setPerspective(45,(float)w / h,15.0f, 150000.0f);
         projection_matrix = scalem.mult(projection_matrix);
+
         needUpdateMatrix();
     }
 
     public void translate(float x, float y){
-        eye.setSum(x,y);
-        center.setSum(x,y);
+        eye.setAdd(x,y);
+        center.setAdd(x,y);
         needUpdateMatrix();
     }
 
@@ -56,12 +56,14 @@ public class Camera {
     public void rotate(float fovy){
         Matrix4f rotm = new Matrix4f();
         rotm.setToIndentity();
-        rotm.translate(rotation_point.x(), rotation_point.y(), rotation_point.z());
+        rotm.translate(rotation_point.x(), rotation_point.y(), 0);
         rotm.rotate(fovy,0,0,1.0f);
-        rotm.translate(-rotation_point.x(), -rotation_point.y(), -rotation_point.z());
-        eye = rotm.mult(eye).toAffine();
-        center = rotm.mult(center).toAffine();
-        up = rotm.mult(new Vector4f(up.x(), up.y(), up.z(), 0.0f)).toAffine();
+        rotm.translate(-rotation_point.x(), -rotation_point.y(), 0);
+
+        eye = rotm.mult(eye).toVector3f();
+        center = rotm.mult(center).toVector3f();
+        up = rotm.mult(new Vector4f(up.x(), up.y(), up.z(), 0.0f)).toVector3f();
+
         needUpdateMatrix();
     }
 
@@ -69,12 +71,12 @@ public class Camera {
     {
         Vector3f near = unproject(x,y,0f);
         Vector3f far = unproject(x,y,1f);
-        Log.e("NEAR",near.debug());
-        Log.e("FAR",far.debug());
-        Log.e("END","END");
-        Vector3f ray = far.dif(near);
+//        Log.e("NEAR",near.debug());
+//        Log.e("FAR",far.debug());
+//        Log.e("END","END");
+        Vector3f ray = far.sub(near);
         float dif = -near.z() / ray.z();
-        return  near.plus(ray.mult(dif));
+        return  near.add(ray.mult(dif));
     }
 
     //calc functions
@@ -111,6 +113,7 @@ public class Camera {
         view_matrix.setLookAt(eye,center,up);
         view_projection_matrix = projection_matrix.mult(view_matrix);
         view_projection_matrix_inv = view_projection_matrix.inverted();
+
         is_need_update_mvp = false;
     }
 

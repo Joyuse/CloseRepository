@@ -19,26 +19,30 @@ public class Vector3f {
     public void setY(float y){ values[1] = y; }
     public void setZ(float z){ values[2] = z; }
 
-    public void setSum(float x, float y, float z){
-        setSum(x,y);
+    public void setAdd(float x, float y, float z){
+        setAdd(x,y);
         values[2] += z;
     }
 
-    public void setSum(Vector3f other){
-        this.setSum(other.x(), other.y(), other.z());
+    public void setAdd(Vector3f other){
+        this.setAdd(other.x(), other.y(), other.z());
     }
 
-    public void setSum(float x, float y){
+    public void setAdd(float x, float y){
         values[0] += x;
         values[1] += y;
     }
 
-    public Vector3f dif(Vector3f other)
+    public Vector3f div(float v){
+        return  new Vector3f(this.x() / v, this.y() / v, this.z() / v);
+    }
+
+    public Vector3f sub(Vector3f other)
     {
         return new Vector3f(this.x() - other.x(), this.y() - other.y(), this.z() - other.z());
     }
 
-    public Vector3f plus(Vector3f other)
+    public Vector3f add(Vector3f other)
     {
         return new Vector3f(this.x() + other.x(), this.y() + other.y(), this.z() + other.z());
     }

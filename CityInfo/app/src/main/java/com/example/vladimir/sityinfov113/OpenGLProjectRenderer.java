@@ -1,6 +1,5 @@
 package com.example.vladimir.sityinfov113;
 
-import android.opengl.GLES10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
@@ -8,12 +7,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-
-import android.util.Log;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL10Ext;
 
 /**
  * Created by Vladimir on 16.08.2017.
@@ -169,10 +164,12 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         };
 
         float[] test={
-            0f,0f,0f,
+            5f,5f,0f,
             1f, 1f, 1f, 1f,
-            1f,1f,0f,
-            1f, 0f, 0f,1f
+            10f,10f,0f,
+            1f, 0f, 0f,1f,
+            15f,5f,0f,
+            1f, 1f, 1f, 1f,
         };
 
         test_vertices = ByteBuffer.allocateDirect(test.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -297,6 +294,7 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     // задаем ViewPort
     public void onSurfaceChanged(GL10 glUnused, int width, int height) {
         //Первый вариант
+        GLES20.glViewport(0,0,width,height);
         camera.setViewport(width,height);
     }
 
@@ -305,10 +303,10 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     // рисуем
     public void onDrawFrame(GL10 glUnused) {
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
-
         GLES20.glUseProgram(colored_vertices_program_handle);
         GLES20.glUniformMatrix4fv(MVPmatrix_location, 1, false,camera.getViewProjectionMatrix().values, 0);
         drawColoredPoints(verticesReady, GLES20.GL_TRIANGLES, 0,30);
+        drawColoredPoints(test_vertices, GLES20.GL_TRIANGLES, 0,3);
 
 //        if(!one_time) {
 //            Log.w("F",camera.getViewProjectionMatrix().debug());
