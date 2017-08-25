@@ -1,6 +1,6 @@
 package com.example.vladimir.sityinfov113;
 
-import android.graphics.Point;
+import android.graphics.PointF;
 
 /**
  * Created by Vladimir on 18.08.2017.
@@ -14,7 +14,7 @@ public class Camera {
 
     Vector3f rotation_point;
     Vector3f eye = new Vector3f(0.0f,0.0f,100.0f);
-    Vector3f center = new Vector3f(0.0f,0.0f,0.0f);
+    Vector3f forward = new Vector3f(0.0f,0.0f,-1.0f);
     Vector3f up = new Vector3f(0.0f,1.0f,0.0f);
 
     Matrix4f projection_matrix = new Matrix4f();
@@ -33,14 +33,13 @@ public class Camera {
         scalem.scale(-1,1,1);
 
         projection_matrix.setPerspective(45,(float)w / h,15.0f, 150000.0f);
-        projection_matrix = scalem.mult(projection_matrix);
+        projection_matrix = scalem.multed(projection_matrix);
 
         needUpdateMatrix();
     }
 
     public void translate(float x, float y){
-        eye.setAdd(x,y);
-        center.setAdd(x,y);
+        eye.add(x,y);
         needUpdateMatrix();
     }
 
@@ -60,9 +59,9 @@ public class Camera {
         rotm.rotate(fovy,0,0,1.0f);
         rotm.translate(-rotation_point.x(), -rotation_point.y(), 0);
 
-        eye = rotm.mult(eye).toVector3f();
-        center = rotm.mult(center).toVector3f();
-        up = rotm.mult(new Vector4f(up.x(), up.y(), up.z(), 0.0f)).toVector3f();
+        eye = rotm.multed(eye).toVector3f();
+        forward = rotm.multed(new Vector4f(forward.x(), forward.y(), forward.z(), 0.0f)).toVector3f();
+        up = rotm.multed(new Vector4f(up.x(), up.y(), up.z(), 0.0f)).toVector3f();
 
         needUpdateMatrix();
     }
@@ -71,26 +70,23 @@ public class Camera {
     {
         Vector3f near = unproject(x,y,0f);
         Vector3f far = unproject(x,y,1f);
-//        Log.e("NEAR",near.debug());
-//        Log.e("FAR",far.debug());
-//        Log.e("END","END");
-        Vector3f ray = far.sub(near);
+        Vector3f ray = far.subed(near);
         float dif = -near.z() / ray.z();
-        return  near.add(ray.mult(dif));
+        return  near.added(ray.multed(dif));
     }
 
     //calc functions
     public Vector3f unproject(float x,float y,float z)
     {
         Vector4f res = new Vector4f(x / width * 2f - 1f, (height - y) / height * 2f - 1f, 2f * z - 1f, 1f);
-        res = getViewProjectionMatrixInv().mult(res);
+        res = getViewProjectionMatrixInv().multed(res);
         return  res.toAffine();
     }
 
-    public Point project(Vector3f position) //incorrect
+    public PointF project(Vector3f position)
     {
-        Vector4f pr = getViewProjectionMatrix().mult(position);
-        return new Point((int)pr.x(), height - (int)pr.y());
+        Vector3f pr = getViewProjectionMatrix().multed(position).toAffine();
+        return new PointF((pr.x() * 0.5f + 0.5f) * width, height - (pr.y() * 0.5f + 0.5f) * height);
     }
 
     //getters
@@ -110,10 +106,10 @@ public class Camera {
     }
 
     void updateViewProjectionViewportMatrix(){
-        view_matrix.setLookAt(eye,center,up);
-        view_projection_matrix = projection_matrix.mult(view_matrix);
-        view_projection_matrix_inv = view_projection_matrix.inverted();
 
+        view_matrix.setLookAt(eye,forward,up);
+        view_projection_matrix = projection_matrix.multed(view_matrix);
+        view_projection_matrix_inv = view_projection_matrix.inverted();
         is_need_update_mvp = false;
     }
 

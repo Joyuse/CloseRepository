@@ -12,17 +12,17 @@ public class Matrix4f {
     public Matrix4f(){}
     public Matrix4f(Matrix4f other){ this.values = other.values; }
 
-    public Vector4f mult(Vector3f position){
-        return this.mult(new Vector4f(position,1.0f));
+    public Vector4f multed(Vector3f position){
+        return this.multed(new Vector4f(position,1.0f));
     }
 
-    public Vector4f mult(Vector4f vector){
+    public Vector4f multed(Vector4f vector){
         Vector4f res = new Vector4f();
         Matrix.multiplyMV(res.values,0,this.values,0,vector.values,0);
         return  res;
     }
 
-    public Matrix4f mult(Matrix4f mat){
+    public Matrix4f multed(Matrix4f mat){
         Matrix4f res = new Matrix4f();
         Matrix.multiplyMM(res.values,0,this.values,0,mat.values,0);
         return res;
@@ -46,8 +46,17 @@ public class Matrix4f {
         this.setColumn(3,w2,h2,0.0f,1.0f);
     }
 
-    public void setLookAt(Vector3f eye, Vector3f center, Vector3f up) {
-        Matrix.setLookAtM(values,0,eye.x(), eye.y(), eye.z(), center.x(), center.y(), center.z(), up.x(), up.y(), up.z());
+    public void setLookAt(Vector3f eye, Vector3f forward, Vector3f up) {
+        Vector3f forwardn = forward.normalized();
+        forwardn.negative();
+        Vector3f side = Vector3f.crossProduct(forwardn, up);
+        side.normalize();
+        Vector3f upVector = Vector3f.crossProduct(side, forwardn);
+
+        setColumn(0, -side.x(), upVector.x(), forwardn.x(), 0f);
+        setColumn(1, -side.y(), upVector.y(), forwardn.y(), 0f);
+        setColumn(2, -side.z(), upVector.z(), forwardn.z(), 0f);
+        setColumn(3, (float)(eye.xd() * side.xd() + eye.yd() * up.xd()),(float)-( eye.xd() * side.yd() + eye.yd() * up.yd() ),(float)(-eye.zd() * forwardn.zd()),1f);
     }
 
     public void setColumn(int column, float x, float y, float z, float w){
