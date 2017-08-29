@@ -1,5 +1,7 @@
 package com.example.vladimir.sityinfov113;
 
+import android.graphics.PointF;
+
 /**
  * Created by Vladimir on 22.08.2017.
  */
@@ -120,11 +122,16 @@ public class Vector3f {
         return new Vector3f(this.x() * value, this.y() * value, this.z() * value);
     }
 
+    public PointF toPointF(){
+        return  new PointF(x(), y());
+    }
 
-    String debug(){
-        String res = new String();
-        for(int i = 0 ; i < 3; i++)
-            res += values[i] + " ";
-        return  res;
+    @Override
+    public String toString(){
+        String res = new String("Vector3f(");
+        for(int i = 0 ; i < 2; i++)
+            res += values[i] + ", ";
+        res += values[2] + ")";
+        return res;
     }
 }

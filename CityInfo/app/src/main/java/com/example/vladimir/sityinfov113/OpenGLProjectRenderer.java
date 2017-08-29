@@ -287,7 +287,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         mColorHandle = GLES20.glGetAttribLocation(colored_vertices_program_handle, "a_Color");
 
         GLES20.glDisable(GLES20.GL_CULL_FACE);
-        //Говорим программе что мы рендерим сцену
     }
 
     @Override

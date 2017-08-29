@@ -29,10 +29,12 @@ public class Vector4f
     public Vector3f toVector3f(){ return  new Vector3f(x(), y(), z()); }
     public Vector3f toAffine(){ return (w() != 0) ?  new Vector3f(x() / w(), y() / w(), z() /w()) : new Vector3f(x(),y(),z()); }
 
-    String debug(){
-        String res = new String();
-        for(int i = 0 ; i < 4; i++)
-            res += values[i] + " ";
-        return  res;
+    @Override
+    public String toString(){
+        String res = new String("Vector4f(");
+        for(int i = 0 ; i < 3; i++)
+            res += values[i] + ", ";
+        res += values[3] + ")";
+        return res;
     }
 }

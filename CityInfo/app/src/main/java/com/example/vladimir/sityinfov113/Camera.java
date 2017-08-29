@@ -1,6 +1,7 @@
 package com.example.vladimir.sityinfov113;
 
 import android.graphics.PointF;
+import android.util.Log;
 
 /**
  * Created by Vladimir on 18.08.2017.
@@ -43,8 +44,9 @@ public class Camera {
         needUpdateMatrix();
     }
 
-    public void zoom(float distance){
-        eye.setZ(eye.z() + distance);
+    public void zoom(float ratio){
+        float dif = (eye.z() *(ratio - 1f)) / forward.z();
+        eye.add(forward.multed(dif));
         needUpdateMatrix();
     }
 
@@ -83,6 +85,11 @@ public class Camera {
         return  res.toAffine();
     }
 
+    public Vector3f getCenter(){
+        float dif = -eye.z() / forward.z();
+        return eye.added(forward.multed(dif));
+    }
+
     public PointF project(Vector3f position)
     {
         Vector3f pr = getViewProjectionMatrix().multed(position).toAffine();
@@ -102,15 +109,25 @@ public class Camera {
 
     //private
     void needUpdateMatrix(){
+        Log.w("W", "eye" + eye);
+        Log.w("W", "forward" + forward);
+        Log.w("W", "up" + up);
         is_need_update_mvp = true;
     }
 
     void updateViewProjectionViewportMatrix(){
-
         view_matrix.setLookAt(eye,forward,up);
         view_projection_matrix = projection_matrix.multed(view_matrix);
         view_projection_matrix_inv = view_projection_matrix.inverted();
         is_need_update_mvp = false;
     }
 
+    void resetCamera ()
+    {
+        Log.w("W","reset_camera_click_called");
+        eye.set(0.0f,0.0f,100.0f);
+        forward.set(0.0f,0.0f,-1.0f);
+        up.set(0.0f,1.0f,0.0f);
+        needUpdateMatrix();
+    }
 }

@@ -93,12 +93,14 @@ public class Matrix4f {
         return new Vector4f(values[offset],values[offset + 1], values[offset + 2], values[offset + 3]);
     }
 
-    String debug(){
-        String res = new String();
-        res += "row 0 " + getColumn(0).debug() + "\n";
-        res += "row 1 " + getColumn(1).debug() + "\n";
-        res += "row 2 " + getColumn(2).debug() + "\n";
-        res += "row 3 " + getColumn(3).debug() + "\n";
+    @Override
+    public String toString(){
+        String res = new String("Matrix4f(\n");
+        res += getColumn(0).toString() + "\n";
+        res += getColumn(1).toString() + "\n";
+        res += getColumn(2).toString() + "\n";
+        res += getColumn(3).toString() + "\n";
+        res += ")";
         return  res;
     }
 }

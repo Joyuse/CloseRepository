@@ -31,15 +31,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right|center"
             android:layout_marginTop="70dip"
-            android:background="@android:drawable/ic_input_add" />
+            android:background="@android:drawable/ic_input_add"
+            android:clickable="true"/>
 
         <Button
-            android:id="@+id/ZoomOut"
+            android:id="@+id/reset"
             android:layout_width="46dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center"
             android:layout_marginTop="10dp"
-            android:background="@android:drawable/ic_delete" />
+            android:background="@android:drawable/ic_delete"
+            android:clickable="true"/>
 
         <include
             android:layout_width="match_parent"

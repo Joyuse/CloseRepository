@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">JavaTutorial</string>
+
+    <string-array name="string_array" >
+        <item> Koshka </item>
+        <item> Vodka </item>
+        <item> Balalaka </item>
+        <item> Velosiped </item>
+    </string-array>
+</resources>
