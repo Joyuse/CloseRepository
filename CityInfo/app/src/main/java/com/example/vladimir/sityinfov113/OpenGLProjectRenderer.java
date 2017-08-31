@@ -33,7 +33,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
     public Camera camera = new Camera();
 
-
     FloatBuffer test_vertices;
 
     public OpenGLProjectRenderer() {

@@ -3,10 +3,14 @@ package com.example.vladimir.sityinfov113;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -14,7 +18,9 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
     private GLSurfaceView glSurfaceView;
-    private Camera camera = new Camera();
+
+    OpenGLProjectRenderer renderer;
+    NavigationView navigation_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +43,46 @@ public class MainActivity extends Activity {
         glSurfaceView.setEGLContextClientVersion(2);
         glSurfaceView.setRenderer(new OpenGLProjectRenderer());
 
+        //design and other
         final Button reset_camera_button = findViewById(R.id.reset);
         final Button zoom_in_camera_button = findViewById(R.id.ZoomIn);
+
+        navigation_view = (NavigationView) findViewById(R.id.NavigationView);
+
+        navigation_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+           @Override
+           public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+               switch (item.getItemId()){
+                   case R.id.message:
+                       Log.w("W","Clicked");
+                       break;
+                   case R.id.home_id:
+                       break;
+                   case R.id.favorites:
+                       Log.w("W","Clicked");
+                       break;
+                   case R.id.city:
+                       Log.w("W","Clicked city");
+                       Intent start_choice_city_activity = new Intent(getApplicationContext(), ChoiceCityActivity.class);
+                       startActivity(start_choice_city_activity);
+                       Log.w("W","Clicked");
+                       break;
+                   case R.id.swap:
+                       Log.w("W","Clicked");
+                       break;
+                   case R.id.nature:
+                       Log.w("W","Clicked");
+                       break;
+               }
+               return false;
+           }
+       });
 
         reset_camera_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.w("W","= " + camera.eye);
-                Log.w("W","= " + camera.forward);
-                Log.w("W","= " + camera.up);
                 Log.w("W","reset_camera_button click");
-                camera.resetCamera();
+                renderer.camera.resetCamera();
             }
         });
 
@@ -55,6 +90,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Log.w("W","zoom_in_camera_button click");
+
             }
         });
     }

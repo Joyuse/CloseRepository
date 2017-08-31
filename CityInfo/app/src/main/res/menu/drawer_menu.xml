@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/home_id"
-        android:title="Home"
+        android:title="Choice City"
         android:icon="@drawable/ic_shortcut_group"/>
         <item
             android:id="@+id/message"
@@ -13,7 +13,7 @@
             android:icon="@drawable/ic_shortcut_message"/>
         <item
             android:id="@+id/favorites"
-            android:title="Home"
+            android:title="hz"
             android:icon="@drawable/ic_shortcut_favorite"/>
     </group>
 
