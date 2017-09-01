@@ -5,7 +5,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,9 +16,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-    private GLSurfaceView glSurfaceView;
-
-    OpenGLProjectRenderer renderer;
+    private OpenGLSurfaceView glSurfaceView;
     NavigationView navigation_view;
 
     @Override
@@ -82,7 +79,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Log.w("W","reset_camera_button click");
-                renderer.camera.resetCamera();
+                glSurfaceView.renderer.camera.resetCamera();
             }
         });
 
@@ -90,7 +87,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Log.w("W","zoom_in_camera_button click");
-
+                //glSurfaceView.renderer.camera.zoom();
             }
         });
     }

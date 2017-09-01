@@ -32,10 +32,15 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
 
     public Camera camera = new Camera();
+    public ReadFile readFile = new ReadFile();
 
     FloatBuffer test_vertices;
-
+    
     public OpenGLProjectRenderer() {
+
+//        String file_name = "D:/MobileProjects/CityInfo/Triangles.txt";
+//        readFile.readBufferFile(file_name);
+
         float[] vertices = {
                 //Координаты XYZ
                 //ЦВЕТ RGB
