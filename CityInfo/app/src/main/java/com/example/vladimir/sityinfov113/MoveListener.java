@@ -75,7 +75,6 @@ public class MoveListener extends GestureDetector.SimpleOnGestureListener{
         Vector3f unp1a = camera.unprojectPlane(event.getX(FIRST_POINTER_COMMON), event.getY(FIRST_POINTER_COMMON));
         Vector3f dif = unp1.subed(unp1a);
         camera.translate(dif.x(), dif.y());
-
         return true;
     }
 

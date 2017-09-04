@@ -35,6 +35,15 @@
             android:clickable="true"/>
 
         <Button
+            android:id="@+id/ZoomOut"
+            android:layout_width="46dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
+            android:layout_marginTop="120dp"
+            android:background="@android:drawable/editbox_background"
+            android:clickable="true"/>
+
+        <Button
             android:id="@+id/reset"
             android:layout_width="46dp"
             android:layout_height="wrap_content"
@@ -46,8 +55,8 @@
     </FrameLayout>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/NavigationView"

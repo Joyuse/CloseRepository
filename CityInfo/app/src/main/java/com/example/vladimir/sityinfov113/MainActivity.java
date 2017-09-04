@@ -17,7 +17,9 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
     private OpenGLSurfaceView glSurfaceView;
+
     NavigationView navigation_view;
+    final float ratio = 0.25f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class MainActivity extends Activity {
         //design and other
         final Button reset_camera_button = findViewById(R.id.reset);
         final Button zoom_in_camera_button = findViewById(R.id.ZoomIn);
+        final Button zoom_out_camera_button = findViewById(R.id.ZoomOut);
 
         navigation_view = (NavigationView) findViewById(R.id.NavigationView);
 
@@ -73,7 +76,7 @@ public class MainActivity extends Activity {
                }
                return false;
            }
-       });
+        });
 
         reset_camera_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +89,16 @@ public class MainActivity extends Activity {
         zoom_in_camera_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.w("W","zoom_in_camera_button click");
-                //glSurfaceView.renderer.camera.zoom();
+                Log.w("W","zoom_in_camera_button click = " + ratio);
+                glSurfaceView.renderer.camera.zoomInCamera(ratio);
+            }
+        });
+
+        zoom_out_camera_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.w("W","zoom_out_camera_button click = " + ratio);
+                glSurfaceView.renderer.camera.zoomOutCamera(ratio);
             }
         });
     }

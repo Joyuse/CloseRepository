@@ -24,6 +24,10 @@ public class Camera {
     Matrix4f view_projection_matrix;
     Matrix4f view_projection_matrix_inv;
 
+
+    //for zoom button
+    float plus = 0;
+    float minus = 0;
     //setters
     public void setViewport(int w, int h)
     {
@@ -32,10 +36,8 @@ public class Camera {
         Matrix4f scalem = new Matrix4f();
         scalem.setToIndentity();
         scalem.scale(-1,1,1);
-
         projection_matrix.setPerspective(45,(float)w / h,15.0f, 150000.0f);
         projection_matrix = scalem.multed(projection_matrix);
-
         needUpdateMatrix();
     }
 
@@ -109,9 +111,6 @@ public class Camera {
 
     //private
     void needUpdateMatrix(){
-        Log.w("W", "eye" + eye);
-        Log.w("W", "forward" + forward);
-        Log.w("W", "up" + up);
         is_need_update_mvp = true;
     }
 
@@ -128,6 +127,23 @@ public class Camera {
         eye.set(0.0f,0.0f,100.0f);
         forward.set(0.0f,0.0f,-1.0f);
         up.set(0.0f,1.0f,0.0f);
+        needUpdateMatrix();
+    }
+
+
+    void zoomInCamera(float ratio)
+    {
+        Log.w("W","zoomInCamera");
+        float dif = (eye.z() *(ratio - 1f)) / forward.z();
+        eye.add(forward.multed(dif));
+        needUpdateMatrix();
+    }
+
+    void zoomOutCamera(float ratio)
+    {
+        Log.w("W","zoomOutCamera");
+        float dif = (eye.z() *(ratio - 1f)) / forward.z();
+        eye.add(forward.multed(dif));
         needUpdateMatrix();
     }
 }
