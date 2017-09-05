@@ -57,6 +57,8 @@ public class MainActivity extends Activity {
                        Log.w("W","Clicked");
                        break;
                    case R.id.home_id:
+                       Intent load_file_activity = new Intent(getApplicationContext(), Load_file_activity.class);
+                       startActivity(load_file_activity);
                        break;
                    case R.id.favorites:
                        Log.w("W","Clicked");

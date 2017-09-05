@@ -2,10 +2,19 @@ package com.example.vladimir.sityinfov113;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.os.Environment;
+import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -32,15 +41,12 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
 
     public Camera camera = new Camera();
-    public ReadFile readFile = new ReadFile();
-
     FloatBuffer test_vertices;
-    
+    String strLine;
     public OpenGLProjectRenderer() {
 
 //        String file_name = "D:/MobileProjects/CityInfo/Triangles.txt";
 //        readFile.readBufferFile(file_name);
-
         float[] vertices = {
                 //Координаты XYZ
                 //ЦВЕТ RGB
@@ -132,6 +138,7 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 1.5f,-1.5f,0.0f,
                 0.34f, 0.5f, 0.5f, 0.0f,
         };
+
         float[] test={
             5f,5f,0f,
             1f, 1f, 1f, 1f,
@@ -141,7 +148,7 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
             1f, 1f, 1f, 1f,
         };
 
-        readFile.readfile();
+        read_file();
 
         test_vertices = ByteBuffer.allocateDirect(test.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         test_vertices.put(test).position(0);
@@ -274,6 +281,7 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 //            one_time = true;
 //        }
 //        camera.translate(0.001f,0.0f);
+
     }
 
     //функция рисовки 3-ка
@@ -293,6 +301,48 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
         //Вырисовываем 3-к
         GLES20.glDrawArrays(render_type, offset, count);
+    }
+
+    public void read_file() {
+        String fileName = "123";
+        List<String> strings = new ArrayList<String>();
+        Log.w("W","1");
+        Log.w("W","СЧИТЫВАЕМ ФАЙЛ");
+        File myFile = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName);
+        try{
+            FileInputStream fstream = new FileInputStream(myFile);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+            //String strLine;
+            while ((strLine = br.readLine()) != null){
+                System.out.println(strLine);
+                strings.add(strLine);
+            }
+        }catch (IOException e){
+            System.out.println("Ошибка");
+        }
+        Log.w("W","СЧИТЫВАЕМ ФАЙЛ" + strings);
+
+        /*
+        try {
+            FileInputStream inputStream = new FileInputStream(myFile);
+            Log.w("W","input = " +inputStream);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            Log.w("W","buffered = " +bufferedReader);
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            try {
+                while ((line = bufferedReader.readLine()) != null){
+                    stringBuilder.append(line);
+                }
+                Log.w("W","stringbuilder = " +stringBuilder);
+                //textView.setText(stringBuilder);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        */
     }
 
 }

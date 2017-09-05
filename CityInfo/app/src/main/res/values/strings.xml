@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CityInfo</string>
+    <string name="write_done">Complite</string>
 </resources>

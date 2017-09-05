@@ -15,30 +15,24 @@ import java.io.InputStreamReader;
  */
 
 public class ReadFile {
-    public String file_naame;
-    String fileName = "MyNewFile";
-    void readfile(String file_name) {
+    String fileName = "123";
 
-        File myFile = new File(Environment.getExternalStorageDirectory().toString() + "/" + fileName);
+    public void read_file() {
+        Log.w("W","1");
+        Log.w("W","СЧИТЫВАЕМ ФАЙЛ");
+        File myFile = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName);
         try {
             FileInputStream inputStream = new FileInputStream(myFile);
-            /*
-             * Буфферезируем данные из выходного потока файла
-             */
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            /*
-             * Класс для создания строк из последовательностей символов
-             */
             StringBuilder stringBuilder = new StringBuilder();
             String line;
             try {
-                /*
-                 * Производим построчное считывание данных из файла в конструктор строки,
-                 * Псоле того, как данные закончились, производим вывод текста в TextView
-                 */
                 while ((line = bufferedReader.readLine()) != null){
                     stringBuilder.append(line);
                 }
+                //вернуть стринг билдер
+                //String[] parts = text.split("\n");
+                //Log.w("W","PARTS = " + parts[1]);
                 //textView.setText(stringBuilder);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -46,6 +40,5 @@ public class ReadFile {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        Log.w("W","read_file" + readed_file);
     }
 }
