@@ -8,13 +8,12 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -305,44 +304,34 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
     public void read_file() {
         String fileName = "123";
-        List<String> strings = new ArrayList<String>();
-        Log.w("W","1");
-        Log.w("W","СЧИТЫВАЕМ ФАЙЛ");
+        Log.w("W", "СЧИТЫВАЕМ ФАЙЛ");
         File myFile = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName);
-        try{
-            FileInputStream fstream = new FileInputStream(myFile);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-            //String strLine;
-            while ((strLine = br.readLine()) != null){
-                System.out.println(strLine);
-                strings.add(strLine);
-            }
-        }catch (IOException e){
-            System.out.println("Ошибка");
-        }
-        Log.w("W","СЧИТЫВАЕМ ФАЙЛ" + strings);
-
-        /*
         try {
             FileInputStream inputStream = new FileInputStream(myFile);
-            Log.w("W","input = " +inputStream);
+            Log.w("W", "input = " + inputStream);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            Log.w("W","buffered = " +bufferedReader);
+            Log.w("W", "buffered = " + bufferedReader);
             StringBuilder stringBuilder = new StringBuilder();
             String line;
+            //считываем построчно
             try {
-                while ((line = bufferedReader.readLine()) != null){
+                while ((line = bufferedReader.readLine()) != null) {
                     stringBuilder.append(line);
                 }
-                Log.w("W","stringbuilder = " +stringBuilder);
-                //textView.setText(stringBuilder);
+                //стринг билдер = файлу
+                Log.w("W", "stringbuilder = " + stringBuilder);
+                String[] test_line_string = stringBuilder.toString().split("\n");
+                Log.w("W", "test_line_string = " + test_line_string[0]);
+                //String [] split = test_line_string.split("\n");
+                //Log.w("W", "1 = " + split[1]);
+                //Log.w("W", "2 = " + split[2]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        */
     }
 
 }
+

@@ -62,11 +62,9 @@ public class Camera {
         rotm.translate(rotation_point.x(), rotation_point.y(), 0);
         rotm.rotate(fovy,0,0,1.0f);
         rotm.translate(-rotation_point.x(), -rotation_point.y(), 0);
-
         eye = rotm.multed(eye).toVector3f();
         forward = rotm.multed(new Vector4f(forward.x(), forward.y(), forward.z(), 0.0f)).toVector3f();
         up = rotm.multed(new Vector4f(up.x(), up.y(), up.z(), 0.0f)).toVector3f();
-
         needUpdateMatrix();
     }
 
@@ -129,7 +127,6 @@ public class Camera {
         up.set(0.0f,1.0f,0.0f);
         needUpdateMatrix();
     }
-
 
     void zoomInCamera(float ratio)
     {
