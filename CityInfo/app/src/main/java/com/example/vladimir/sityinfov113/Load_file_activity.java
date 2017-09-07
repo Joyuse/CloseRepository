@@ -19,8 +19,10 @@ public class Load_file_activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_load_file_activity);
         Button load_file = (Button)findViewById(R.id.load_file_button);
+
         final ProgressBar progress_bar = (ProgressBar)findViewById(R.id.progressBar2);
         final ThinDownloadManager downloadManager = new ThinDownloadManager(5);
 

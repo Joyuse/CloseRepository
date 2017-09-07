@@ -40,103 +40,104 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
 
     public Camera camera = new Camera();
+    MainActivity mainActivity = new MainActivity();
     FloatBuffer test_vertices;
     String strLine;
+    float [] mass_vertices = new float[0];
+
     public OpenGLProjectRenderer() {
 
-//        String file_name = "D:/MobileProjects/CityInfo/Triangles.txt";
-//        readFile.readBufferFile(file_name);
-        float[] vertices = {
-                //Координаты XYZ
-                //ЦВЕТ RGB
-
-                // треугольник 1
-                -0.9f, 0.8f,0.0f,
-                1.0f, 1.0f, 1.0f, 0.0f,
-                -0.9f, 0.2f,0.0f,
-                1.0f, 1.0f, 1.0f, 0.0f,
-                -0.5f, 0.8f,0.0f,
-                1.0f, 1.0f, 1.0f, 0.0f,
-                //боковина Розовая
-                -0.5f, 0.8f,1.0f,
-                1.0f, 0.5f, 0.5f, 0.0f,
-                -0.5f, 0.8f,0.0f,
-                1.0f, 0.5f, 0.5f, 0.0f,
-                -0.9f, 0.2f,1.0f,
-                1.0f, 0.5f, 0.5f, 0.0f,
-                //боковниа серая
-                -0.9f, 0.2f,1.0f,
-                0.5f, 0.5f, 0.5f, 0.0f,
-                -0.9f, 0.2f,0.0f,
-                0.5f, 0.5f, 0.5f, 0.0f,
-                -0.5f, 0.8f,0.0f,
-                0.5f, 0.5f, 0.5f, 0.0f,
-                //боковина темно-зеленая
-                -0.9f, 0.2f,1.0f,
-                0.6f, 0.6f, 0.0f, 0.0f,
-                -0.9f, 0.2f,0.0f,
-                0.6f, 0.6f, 0.0f, 0.0f,
-                -0.9f, 0.8f,0.0f,
-                0.6f, 0.6f, 0.0f, 0.0f,
-                //Боковина тоже ярко зеленого цвета
-                -0.9f, 0.8f,1.0f,
-                0.2f, 0.8f, 0.0f, 0.0f,
-                -0.9f, 0.8f,0.0f,
-                0.2f, 0.8f, 0.0f, 0.0f,
-                -0.5f, 0.8f,0.0f,
-                0.2f, 0.8f, 0.0f, 0.0f,
-                //боковина хз какого цвета
-                -0.9f, 0.8f,1.0f,
-                0.3f, 0.8f, 0.0f, 0.0f,
-                -0.5f, 0.8f,0.0f,
-                0.3f, 0.8f, 0.5f, 0.0f,
-                -0.5f, 0.8f,1.0f,
-                0.3f, 0.8f, 0.5f, 0.0f,
-                //другая сторона синяя
-                -0.9f, 0.8f,1.0f,
-                0.1f, 0.4f, 0.7f, 0.0f,
-                -0.9f, 0.8f,0.0f,
-                0.1f, 0.4f, 0.5f, 0.0f,
-                -0.9f, 0.2f,1.0f,
-                0.1f, 0.4f, 0.7f, 0.0f,
-                //крыша в последнюю очередь
-                -0.9f, 0.8f, 1.0f,
-                1.0f, 0.5f, 1.0f, 0.0f,
-                -0.9f, 0.2f, 1.0f,
-                1.0f, 0.5f, 1.0f, 0.0f,
-                -0.5f, 0.8f, 1.0f,
-                1.0f, 0.5f, 1.0f, 0.0f,
-                // треугольник 2
-                -0.6f, 0.2f,0.0f,
-                0.34f, 1.0f, 1.0f, 0.0f,
-                -0.2f, 0.2f,0.0f,
-                1.0f, 0.0f, 1.0f, 0.0f,
-                -0.2f, 0.8f,0.0f,
-                1.0f, 0.0f, 1.0f, 0.0f,
-                // треугольник 3
-                0.1f, 0.8f,0.0f,
-                0.34f, 1.0f, 1.0f, 0.0f,
-                0.1f, 0.2f,0.0f,
-                0.34f, 1.0f, 1.0f, 0.0f,
-                0.5f, 0.8f,0.0f,
-                0.34f, 1.0f, 1.0f, 0.0f,
-                // треугольник 4
-                0.1f, 0.2f,0.0f,
-                0.34f, 0.2f, 1.0f, 0.0f,
-                0.5f, 0.2f,0.0f,
-                0.34f, 0.2f, 1.0f, 0.0f,
-                0.5f, 0.8f,0.0f,
-                0.34f, 0.2f, 1.0f, 0.0f,
-                //уже не какая-то поебота
-                1.0f,-1.0f,0.0f,
-                0.34f, 0.5f, 0.5f, 0.0f,
-                1.0f,-1.5f,0.0f,
-                0.34f, 0.5f, 0.5f, 0.0f,
-                1.5f,-1.0f,0.0f,
-                0.34f, 0.5f, 0.5f, 0.0f,
-                1.5f,-1.5f,0.0f,
-                0.34f, 0.5f, 0.5f, 0.0f,
-        };
+//        float[] vertices = {
+//                //Координаты XYZ
+//                //ЦВЕТ RGB
+//
+//                // треугольник 1
+//                -0.9f, 0.8f,0.0f,
+//                1.0f, 1.0f, 1.0f, 0.0f,
+//                -0.9f, 0.2f,0.0f,
+//                1.0f, 1.0f, 1.0f, 0.0f,
+//                -0.5f, 0.8f,0.0f,
+//                1.0f, 1.0f, 1.0f, 0.0f,
+//                //боковина Розовая
+//                -0.5f, 0.8f,1.0f,
+//                1.0f, 0.5f, 0.5f, 0.0f,
+//                -0.5f, 0.8f,0.0f,
+//                1.0f, 0.5f, 0.5f, 0.0f,
+//                -0.9f, 0.2f,1.0f,
+//                1.0f, 0.5f, 0.5f, 0.0f,
+//                //боковниа серая
+//                -0.9f, 0.2f,1.0f,
+//                0.5f, 0.5f, 0.5f, 0.0f,
+//                -0.9f, 0.2f,0.0f,
+//                0.5f, 0.5f, 0.5f, 0.0f,
+//                -0.5f, 0.8f,0.0f,
+//                0.5f, 0.5f, 0.5f, 0.0f,
+//                //боковина темно-зеленая
+//                -0.9f, 0.2f,1.0f,
+//                0.6f, 0.6f, 0.0f, 0.0f,
+//                -0.9f, 0.2f,0.0f,
+//                0.6f, 0.6f, 0.0f, 0.0f,
+//                -0.9f, 0.8f,0.0f,
+//                0.6f, 0.6f, 0.0f, 0.0f,
+//                //Боковина тоже ярко зеленого цвета
+//                -0.9f, 0.8f,1.0f,
+//                0.2f, 0.8f, 0.0f, 0.0f,
+//                -0.9f, 0.8f,0.0f,
+//                0.2f, 0.8f, 0.0f, 0.0f,
+//                -0.5f, 0.8f,0.0f,
+//                0.2f, 0.8f, 0.0f, 0.0f,
+//                //боковина хз какого цвета
+//                -0.9f, 0.8f,1.0f,
+//                0.3f, 0.8f, 0.0f, 0.0f,
+//                -0.5f, 0.8f,0.0f,
+//                0.3f, 0.8f, 0.5f, 0.0f,
+//                -0.5f, 0.8f,1.0f,
+//                0.3f, 0.8f, 0.5f, 0.0f,
+//                //другая сторона синяя
+//                -0.9f, 0.8f,1.0f,
+//                0.1f, 0.4f, 0.7f, 0.0f,
+//                -0.9f, 0.8f,0.0f,
+//                0.1f, 0.4f, 0.5f, 0.0f,
+//                -0.9f, 0.2f,1.0f,
+//                0.1f, 0.4f, 0.7f, 0.0f,
+//                //крыша в последнюю очередь
+//                -0.9f, 0.8f, 1.0f,
+//                1.0f, 0.5f, 1.0f, 0.0f,
+//                -0.9f, 0.2f, 1.0f,
+//                1.0f, 0.5f, 1.0f, 0.0f,
+//                -0.5f, 0.8f, 1.0f,
+//                1.0f, 0.5f, 1.0f, 0.0f,
+//                // треугольник 2
+//                -0.6f, 0.2f,0.0f,
+//                0.34f, 1.0f, 1.0f, 0.0f,
+//                -0.2f, 0.2f,0.0f,
+//                1.0f, 0.0f, 1.0f, 0.0f,
+//                -0.2f, 0.8f,0.0f,
+//                1.0f, 0.0f, 1.0f, 0.0f,
+//                // треугольник 3
+//                0.1f, 0.8f,0.0f,
+//                0.34f, 1.0f, 1.0f, 0.0f,
+//                0.1f, 0.2f,0.0f,
+//                0.34f, 1.0f, 1.0f, 0.0f,
+//                0.5f, 0.8f,0.0f,
+//                0.34f, 1.0f, 1.0f, 0.0f,
+//                // треугольник 4
+//                0.1f, 0.2f,0.0f,
+//                0.34f, 0.2f, 1.0f, 0.0f,
+//                0.5f, 0.2f,0.0f,
+//                0.34f, 0.2f, 1.0f, 0.0f,
+//                0.5f, 0.8f,0.0f,
+//                0.34f, 0.2f, 1.0f, 0.0f,
+//                //уже не какая-то поебота
+//                1.0f,-1.0f,0.0f,
+//                0.34f, 0.5f, 0.5f, 0.0f,
+//                1.0f,-1.5f,0.0f,
+//                0.34f, 0.5f, 0.5f, 0.0f,
+//                1.5f,-1.0f,0.0f,
+//                0.34f, 0.5f, 0.5f, 0.0f,
+//                1.5f,-1.5f,0.0f,
+//                0.34f, 0.5f, 0.5f, 0.0f,
+//        };
 
         float[] test={
             5f,5f,0f,
@@ -147,12 +148,13 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
             1f, 1f, 1f, 1f,
         };
 
-        read_file();
+        float[] vertix = read_file();
+        //read_file();
 
         test_vertices = ByteBuffer.allocateDirect(test.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         test_vertices.put(test).position(0);
-        verticesReady = ByteBuffer.allocateDirect(vertices.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
-        verticesReady.put(vertices).position(0);
+        verticesReady = ByteBuffer.allocateDirect(vertix.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        verticesReady.put(vertix).position(0);
     }
 
     @Override
@@ -302,36 +304,50 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         GLES20.glDrawArrays(render_type, offset, count);
     }
 
-    public void read_file() {
+    public float[] read_file() {
         String fileName = "123";
+        StringBuilder stringBuilder = null;
+
         Log.w("W", "СЧИТЫВАЕМ ФАЙЛ");
         File myFile = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName);
+
         try {
             FileInputStream inputStream = new FileInputStream(myFile);
             Log.w("W", "input = " + inputStream);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             Log.w("W", "buffered = " + bufferedReader);
-            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder = new StringBuilder();
             String line;
             //считываем построчно
             try {
                 while ((line = bufferedReader.readLine()) != null) {
                     stringBuilder.append(line);
                 }
-                //стринг билдер = файлу
-                Log.w("W", "stringbuilder = " + stringBuilder);
-                String[] test_line_string = stringBuilder.toString().split("\n");
-                Log.w("W", "test_line_string = " + test_line_string[0]);
-                //String [] split = test_line_string.split("\n");
-                //Log.w("W", "1 = " + split[1]);
-                //Log.w("W", "2 = " + split[2]);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
-    }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.w("W", "ФАЙЛ НЕ НАЙДЕН");
+            //Intent start_choice_city_activity = new Intent(context,ChoiceCityActivity.class);
+            //mainActivity.startActivity(start_choice_city_activity);
+//            передаем ошибку в MainActivity - она активирует загрузочное активити, там загружаем файл и смотрим на результат
+//            Intent start_choice_city_activity = new Intent(getApplicationContext(), ChoiceCityActivity.class);
+//            startActivity(start_choice_city_activity);
+        }
 
+        //стринг билдер = файлу
+        stringBuilder.toString();
+        Log.w("W", "stringbuilder = " + stringBuilder);
+        //заносим каждый элемент в массив после запятой EZ
+        String[] test_line_string = stringBuilder.toString().split(",");
+        mass_vertices = new float[test_line_string.length];
+        for(int i = 0; i < test_line_string.length; i++)
+            mass_vertices[i] = Float.parseFloat(test_line_string[i]);
+        //возвращаем готовый массив
+        return mass_vertices;
+    }
 }
 
