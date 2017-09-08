@@ -21,7 +21,8 @@ public class Load_file_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_load_file_activity);
-        Button load_file = (Button)findViewById(R.id.load_file_button);
+        Button start_load_file = (Button)findViewById(R.id.load_file_button);
+        Button close_load_file = (Button)findViewById(R.id.close_load_button);
 
         final ProgressBar progress_bar = (ProgressBar)findViewById(R.id.progressBar2);
         final ThinDownloadManager downloadManager = new ThinDownloadManager(5);
@@ -48,7 +49,7 @@ public class Load_file_activity extends AppCompatActivity {
 
         };
 
-        load_file.setOnClickListener(new View.OnClickListener() {
+        start_load_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.w("W","Load_file_button click");
@@ -61,5 +62,14 @@ public class Load_file_activity extends AppCompatActivity {
                 //downloadRequest.cancel();
             }
         });
+        /*
+        close_load_file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.w("W","Cancel_Load_file_button click");
+                downloadRequest.cancel();
+            }
+        });
+        */
     }
 }

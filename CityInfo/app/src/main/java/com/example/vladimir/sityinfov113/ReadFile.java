@@ -15,30 +15,41 @@ import java.io.InputStreamReader;
  */
 
 public class ReadFile {
-    String fileName = "123";
-
-    public void read_file() {
-        Log.w("W","1");
-        Log.w("W","СЧИТЫВАЕМ ФАЙЛ");
+    public float[] read_file() {
+        float [] mass_vertices = new float[0];
+        String fileName = "MyNewFile";
+        StringBuilder stringBuilder = null;
+        Log.w("W", "СЧИТЫВАЕМ ФАЙЛ");
         File myFile = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName);
+
         try {
             FileInputStream inputStream = new FileInputStream(myFile);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder = new StringBuilder();
             String line;
+            //считываем построчно
             try {
-                while ((line = bufferedReader.readLine()) != null){
+                while ((line = bufferedReader.readLine()) != null) {
                     stringBuilder.append(line);
                 }
-                //вернуть стринг билдер
-                //String[] parts = text.split("\n");
-                //Log.w("W","PARTS = " + parts[1]);
-                //textView.setText(stringBuilder);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.w("W", "ФАЙЛ НЕ НАЙДЕН");
+        }
+        //стринг билдер = файлу
+        stringBuilder.toString();
+        Log.w("W", "stringbuilder = " + stringBuilder);
+        //заносим каждый элемент в массив после запятой EZ
+        String[] test_line_string = stringBuilder.toString().split(",");
+        mass_vertices = new float[test_line_string.length];
+        for(int i = 0; i < test_line_string.length; i++)
+            mass_vertices[i] = Float.parseFloat(test_line_string[i]);
+        //возвращаем готовый массив
+        return mass_vertices;
     }
 }

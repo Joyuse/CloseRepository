@@ -17,9 +17,10 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
     private OpenGLSurfaceView glSurfaceView;
-
     NavigationView navigation_view;
     final float ratio = 0.25f;
+
+    public ReadFile readFile = new ReadFile();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,8 @@ public class MainActivity extends Activity {
         else {
             Toast.makeText(this, "This device does not support OpenGL ES 2.0.", Toast.LENGTH_LONG).show(); return;
         }
+
+        Log.w("W","да ебать колотить");
         setContentView(R.layout.main_activity);
 
         glSurfaceView = findViewById(R.id.OpenGLSurfaceViewID);
@@ -117,5 +120,10 @@ public class MainActivity extends Activity {
     {
         super.onPause();
         glSurfaceView.onPause();
+    }
+
+    public void get_file_error (){
+        Intent start_load_city_activity = new Intent(getApplicationContext(), Load_file_activity.class);
+        startActivity(start_load_city_activity);
     }
 }

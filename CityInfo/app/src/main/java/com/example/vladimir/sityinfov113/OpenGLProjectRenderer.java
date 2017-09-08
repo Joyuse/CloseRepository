@@ -2,15 +2,7 @@ package com.example.vladimir.sityinfov113;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.os.Environment;
-import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -40,13 +32,12 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
 
     public Camera camera = new Camera();
-    MainActivity mainActivity = new MainActivity();
+    public ReadFile readFile = new ReadFile();
     FloatBuffer test_vertices;
     String strLine;
     float [] mass_vertices = new float[0];
 
     public OpenGLProjectRenderer() {
-
 //        float[] vertices = {
 //                //Координаты XYZ
 //                //ЦВЕТ RGB
@@ -148,11 +139,11 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
             1f, 1f, 1f, 1f,
         };
 
-        float[] vertix = read_file();
-        //read_file();
+        float[] vertix = readFile.read_file();
 
         test_vertices = ByteBuffer.allocateDirect(test.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         test_vertices.put(test).position(0);
+
         verticesReady = ByteBuffer.allocateDirect(vertix.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
         verticesReady.put(vertix).position(0);
     }
@@ -293,17 +284,16 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         GLES20.glVertexAttribPointer(mPositionHandle, mPositionDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, aTriangleBuffer);
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-
         // информация о цвете
         aTriangleBuffer.position(mColorOffset);
         GLES20.glVertexAttribPointer(mColorHandle, mColorDataSize, GLES20.GL_FLOAT, false,
                 mStrideBytes, aTriangleBuffer);
         GLES20.glEnableVertexAttribArray(mColorHandle);
-
         //Вырисовываем 3-к
         GLES20.glDrawArrays(render_type, offset, count);
     }
 
+    /*
     public float[] read_file() {
         String fileName = "123";
         StringBuilder stringBuilder = null;
@@ -331,6 +321,7 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         catch (FileNotFoundException e) {
             e.printStackTrace();
             Log.w("W", "ФАЙЛ НЕ НАЙДЕН");
+
             //Intent start_choice_city_activity = new Intent(context,ChoiceCityActivity.class);
             //mainActivity.startActivity(start_choice_city_activity);
 //            передаем ошибку в MainActivity - она активирует загрузочное активити, там загружаем файл и смотрим на результат
@@ -349,5 +340,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         //возвращаем готовый массив
         return mass_vertices;
     }
+    */
 }
 

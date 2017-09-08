@@ -42,9 +42,20 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="79dp"
-        android:layout_marginRight="31dp"
+        android:layout_marginRight="168dp"
         android:visibility="invisible"
         app:layout_constraintRight_toRightOf="parent"/>
+
+    <Button
+        android:id="@+id/close_load_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="79dp"
+        android:elevation="0dp"
+        android:text="Cancel"
+        app:layout_constraintLeft_toRightOf="@+id/progressBar2"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
 
