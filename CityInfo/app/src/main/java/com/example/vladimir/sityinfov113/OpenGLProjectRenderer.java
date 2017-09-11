@@ -38,97 +38,11 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     float [] mass_vertices = new float[0];
 
     public OpenGLProjectRenderer() {
-//        float[] vertices = {
-//                //Координаты XYZ
-//                //ЦВЕТ RGB
-//
-//                // треугольник 1
-//                -0.9f, 0.8f,0.0f,
-//                1.0f, 1.0f, 1.0f, 0.0f,
-//                -0.9f, 0.2f,0.0f,
-//                1.0f, 1.0f, 1.0f, 0.0f,
-//                -0.5f, 0.8f,0.0f,
-//                1.0f, 1.0f, 1.0f, 0.0f,
-//                //боковина Розовая
-//                -0.5f, 0.8f,1.0f,
-//                1.0f, 0.5f, 0.5f, 0.0f,
-//                -0.5f, 0.8f,0.0f,
-//                1.0f, 0.5f, 0.5f, 0.0f,
-//                -0.9f, 0.2f,1.0f,
-//                1.0f, 0.5f, 0.5f, 0.0f,
-//                //боковниа серая
-//                -0.9f, 0.2f,1.0f,
-//                0.5f, 0.5f, 0.5f, 0.0f,
-//                -0.9f, 0.2f,0.0f,
-//                0.5f, 0.5f, 0.5f, 0.0f,
-//                -0.5f, 0.8f,0.0f,
-//                0.5f, 0.5f, 0.5f, 0.0f,
-//                //боковина темно-зеленая
-//                -0.9f, 0.2f,1.0f,
-//                0.6f, 0.6f, 0.0f, 0.0f,
-//                -0.9f, 0.2f,0.0f,
-//                0.6f, 0.6f, 0.0f, 0.0f,
-//                -0.9f, 0.8f,0.0f,
-//                0.6f, 0.6f, 0.0f, 0.0f,
-//                //Боковина тоже ярко зеленого цвета
-//                -0.9f, 0.8f,1.0f,
-//                0.2f, 0.8f, 0.0f, 0.0f,
-//                -0.9f, 0.8f,0.0f,
-//                0.2f, 0.8f, 0.0f, 0.0f,
-//                -0.5f, 0.8f,0.0f,
-//                0.2f, 0.8f, 0.0f, 0.0f,
-//                //боковина хз какого цвета
-//                -0.9f, 0.8f,1.0f,
-//                0.3f, 0.8f, 0.0f, 0.0f,
-//                -0.5f, 0.8f,0.0f,
-//                0.3f, 0.8f, 0.5f, 0.0f,
-//                -0.5f, 0.8f,1.0f,
-//                0.3f, 0.8f, 0.5f, 0.0f,
-//                //другая сторона синяя
-//                -0.9f, 0.8f,1.0f,
-//                0.1f, 0.4f, 0.7f, 0.0f,
-//                -0.9f, 0.8f,0.0f,
-//                0.1f, 0.4f, 0.5f, 0.0f,
-//                -0.9f, 0.2f,1.0f,
-//                0.1f, 0.4f, 0.7f, 0.0f,
-//                //крыша в последнюю очередь
-//                -0.9f, 0.8f, 1.0f,
-//                1.0f, 0.5f, 1.0f, 0.0f,
-//                -0.9f, 0.2f, 1.0f,
-//                1.0f, 0.5f, 1.0f, 0.0f,
-//                -0.5f, 0.8f, 1.0f,
-//                1.0f, 0.5f, 1.0f, 0.0f,
-//                // треугольник 2
-//                -0.6f, 0.2f,0.0f,
-//                0.34f, 1.0f, 1.0f, 0.0f,
-//                -0.2f, 0.2f,0.0f,
-//                1.0f, 0.0f, 1.0f, 0.0f,
-//                -0.2f, 0.8f,0.0f,
-//                1.0f, 0.0f, 1.0f, 0.0f,
-//                // треугольник 3
-//                0.1f, 0.8f,0.0f,
-//                0.34f, 1.0f, 1.0f, 0.0f,
-//                0.1f, 0.2f,0.0f,
-//                0.34f, 1.0f, 1.0f, 0.0f,
-//                0.5f, 0.8f,0.0f,
-//                0.34f, 1.0f, 1.0f, 0.0f,
-//                // треугольник 4
-//                0.1f, 0.2f,0.0f,
-//                0.34f, 0.2f, 1.0f, 0.0f,
-//                0.5f, 0.2f,0.0f,
-//                0.34f, 0.2f, 1.0f, 0.0f,
-//                0.5f, 0.8f,0.0f,
-//                0.34f, 0.2f, 1.0f, 0.0f,
-//                //уже не какая-то поебота
-//                1.0f,-1.0f,0.0f,
-//                0.34f, 0.5f, 0.5f, 0.0f,
-//                1.0f,-1.5f,0.0f,
-//                0.34f, 0.5f, 0.5f, 0.0f,
-//                1.5f,-1.0f,0.0f,
-//                0.34f, 0.5f, 0.5f, 0.0f,
-//                1.5f,-1.5f,0.0f,
-//                0.34f, 0.5f, 0.5f, 0.0f,
-//        };
+
+        float[] vertices = {
+                -0.9f, 0.8f,0.0f,
+                1.0f, 1.0f, 1.0f, 0.0f,
+        };
 
         float[] test={
             5f,5f,0f,
@@ -292,54 +206,5 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         //Вырисовываем 3-к
         GLES20.glDrawArrays(render_type, offset, count);
     }
-
-    /*
-    public float[] read_file() {
-        String fileName = "123";
-        StringBuilder stringBuilder = null;
-
-        Log.w("W", "СЧИТЫВАЕМ ФАЙЛ");
-        File myFile = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName);
-
-        try {
-            FileInputStream inputStream = new FileInputStream(myFile);
-            Log.w("W", "input = " + inputStream);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            Log.w("W", "buffered = " + bufferedReader);
-            stringBuilder = new StringBuilder();
-            String line;
-            //считываем построчно
-            try {
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line);
-                }
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.w("W", "ФАЙЛ НЕ НАЙДЕН");
-
-            //Intent start_choice_city_activity = new Intent(context,ChoiceCityActivity.class);
-            //mainActivity.startActivity(start_choice_city_activity);
-//            передаем ошибку в MainActivity - она активирует загрузочное активити, там загружаем файл и смотрим на результат
-//            Intent start_choice_city_activity = new Intent(getApplicationContext(), ChoiceCityActivity.class);
-//            startActivity(start_choice_city_activity);
-        }
-
-        //стринг билдер = файлу
-        stringBuilder.toString();
-        Log.w("W", "stringbuilder = " + stringBuilder);
-        //заносим каждый элемент в массив после запятой EZ
-        String[] test_line_string = stringBuilder.toString().split(",");
-        mass_vertices = new float[test_line_string.length];
-        for(int i = 0; i < test_line_string.length; i++)
-            mass_vertices[i] = Float.parseFloat(test_line_string[i]);
-        //возвращаем готовый массив
-        return mass_vertices;
-    }
-    */
 }
 

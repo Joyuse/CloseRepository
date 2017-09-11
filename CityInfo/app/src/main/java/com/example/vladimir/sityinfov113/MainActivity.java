@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,11 +21,21 @@ public class MainActivity extends Activity {
     NavigationView navigation_view;
     final float ratio = 0.25f;
 
-    public ReadFile readFile = new ReadFile();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences first_start_app = getPreferences(MODE_PRIVATE);
+        if(first_start_app.getBoolean("isFirstRun", true)){
+            Intent load_file_activity = new Intent(getApplicationContext(), Load_file_activity.class);
+            startActivity(load_file_activity);
+            Log.e("E","FIRST RUN");
+        }
+
+        else {
+            Log.e("E","NOT FIRST RUN");
+        }
+        first_start_app.edit().putBoolean("isFirstRun",false).apply();
 
         //Проверяем поддерживается ли OpenGL ES 2.0.
         final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -34,13 +45,12 @@ public class MainActivity extends Activity {
         if (supportsEs2) {
             Toast.makeText(this, "Так то все збс", Toast.LENGTH_LONG).show();
         }
+
         else {
             Toast.makeText(this, "This device does not support OpenGL ES 2.0.", Toast.LENGTH_LONG).show(); return;
         }
 
-        Log.w("W","да ебать колотить");
         setContentView(R.layout.main_activity);
-
         glSurfaceView = findViewById(R.id.OpenGLSurfaceViewID);
         glSurfaceView.setEGLContextClientVersion(2);
         glSurfaceView.setRenderer(new OpenGLProjectRenderer());
@@ -120,10 +130,5 @@ public class MainActivity extends Activity {
     {
         super.onPause();
         glSurfaceView.onPause();
-    }
-
-    public void get_file_error (){
-        Intent start_load_city_activity = new Intent(getApplicationContext(), Load_file_activity.class);
-        startActivity(start_load_city_activity);
     }
 }

@@ -15,13 +15,14 @@ import java.io.InputStreamReader;
  */
 
 public class ReadFile {
+
     public float[] read_file() {
         float [] mass_vertices = new float[0];
-        String fileName = "MyNewFile";
+        String fileName = "loaded_file";
         StringBuilder stringBuilder = null;
         Log.w("W", "СЧИТЫВАЕМ ФАЙЛ");
-        File myFile = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName);
 
+        File myFile = new File(Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName);
         try {
             FileInputStream inputStream = new FileInputStream(myFile);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -37,10 +38,12 @@ public class ReadFile {
                 e.printStackTrace();
             }
         }
+
         catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.w("W", "ФАЙЛ НЕ НАЙДЕН");
+            //e.printStackTrace();
+            Log.w("W", "ФАЙЛ НЕ НАЙДЕН 2");
         }
+
         //стринг билдер = файлу
         stringBuilder.toString();
         Log.w("W", "stringbuilder = " + stringBuilder);

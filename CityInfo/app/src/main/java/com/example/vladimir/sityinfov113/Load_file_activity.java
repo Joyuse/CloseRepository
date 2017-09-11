@@ -38,7 +38,6 @@ public class Load_file_activity extends AppCompatActivity {
 
             @Override
             public void onDownloadFailed(int id, int errorCode, String errorMessage) {
-                //тут выводим ошибку при ошибке загрузки файла
                 Log.e("W", "Ошибка загрузки");
             }
 
@@ -46,15 +45,14 @@ public class Load_file_activity extends AppCompatActivity {
             public void onProgress(int id, long totalBytes, long arg3, int progress) {
                 Log.w("W", "ПРОГРЕСС");
             }
-
         };
 
         start_load_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.w("W","Load_file_button click");
+                Log.w("W","Load file button click");
                 Uri downloadUri = Uri.parse("https://drive.google.com/uc?export=download&id=0Bztp3hEbtAAAS0NzRmhwYXNCZ0U"); //адрес скачиваемого файла
-                Uri destinationUri = Uri.parse( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/123"); // директория скачивания
+                Uri destinationUri = Uri.parse( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/loaded_file"); // директория скачивания
                 DownloadRequest downloadRequest = new DownloadRequest(downloadUri).setDestinationURI(destinationUri);
                 downloadManager.add(downloadRequest);
                 progress_bar.setVisibility(View.VISIBLE);
@@ -62,14 +60,12 @@ public class Load_file_activity extends AppCompatActivity {
                 //downloadRequest.cancel();
             }
         });
-        /*
+
         close_load_file.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.w("W","Cancel_Load_file_button click");
-                downloadRequest.cancel();
             }
         });
-        */
     }
 }
