@@ -20,11 +20,11 @@ public class MainActivity extends Activity {
     private OpenGLSurfaceView glSurfaceView;
     NavigationView navigation_view;
     final float ratio = 0.25f;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //проверка на первыйзапуск
         SharedPreferences first_start_app = getPreferences(MODE_PRIVATE);
         if(first_start_app.getBoolean("isFirstRun", true)){
             Intent load_file_activity = new Intent(getApplicationContext(), Load_file_activity.class);
@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
             Toast.makeText(this, "This device does not support OpenGL ES 2.0.", Toast.LENGTH_LONG).show(); return;
         }
 
+        //после всех проверок выдаем на экран, такую штуку
         setContentView(R.layout.main_activity);
         glSurfaceView = findViewById(R.id.OpenGLSurfaceViewID);
         glSurfaceView.setEGLContextClientVersion(2);
@@ -60,6 +61,7 @@ public class MainActivity extends Activity {
         final Button zoom_in_camera_button = findViewById(R.id.ZoomIn);
         final Button zoom_out_camera_button = findViewById(R.id.ZoomOut);
 
+        //кнопочки выбора
         navigation_view = (NavigationView) findViewById(R.id.NavigationView);
 
         navigation_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -92,7 +94,7 @@ public class MainActivity extends Activity {
                return false;
            }
         });
-
+        //Обработчики кнопок
         reset_camera_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
