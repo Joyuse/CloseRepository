@@ -2,6 +2,7 @@ package com.example.vladimir.sityinfov113;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -17,7 +18,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
     //вершинный буфер
-    final FloatBuffer verticesReady;
+    //final FloatBuffer verticesReady;
 
     int colored_vertices_program_handle;
     int MVPmatrix_location;
@@ -34,15 +35,11 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     public Camera camera = new Camera();
     public ReadFile readFile = new ReadFile();
     FloatBuffer test_vertices;
+    FloatBuffer verticesReady;
     String strLine;
     float [] mass_vertices = new float[0];
 
     public OpenGLProjectRenderer() {
-
-        float[] vertices = {
-                -0.9f, 0.8f,0.0f,
-                1.0f, 1.0f, 1.0f, 0.0f,
-        };
 
         float[] test={
             5f,5f,0f,
@@ -51,15 +48,359 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
             1f, 0f, 0f,1f,
             15f,5f,0f,
             1f, 1f, 1f, 1f,
+
+                5f,5f,10f,
+                0.2f,0.2f,0.2f,1f,
+                10f,10f,10f,
+                0.2f,0.2f,0.2f,1f,
+                15f,5f,10f,
+                0.2f,0.2f,0.2f,1f,
+
+                5f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                5f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                10f,10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                5f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                10f,10f,0f,
+                0.5f,0.5f,0.5f,1f,
+                10f,10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                15f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                15f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                10f,10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                15f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                10f,10f,0f,
+                0.5f,0.5f,0.5f,1f,
+                10f,10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                15f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                15f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                5f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                15f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                5f,5f,0f,
+                0.5f,0.5f,0.5f,1f,
+                5f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                //
+                -5f,-5f,0f,
+                1f, 1f, 1f, 1f,
+                -10f,-10f,0f,
+                1f, 0f, 0f,1f,
+                -15f,-5f,0f,
+                1f, 1f, 1f, 1f,
+
+                -5f,-5f,10f,
+                0.2f,0.2f,0.2f,1f,
+                -10f,-10f,10f,
+                0.2f,0.2f,0.2f,1f,
+                -15f,-5f,10f,
+                0.2f,0.2f,0.2f,1f,
+
+                -5f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -5f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                -10f,-10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -5f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -10f,-10f,0f,
+                0.5f,0.5f,0.5f,1f,
+                -10f,-10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -15f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -15f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                -10f,-10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -15f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -10f,-10f,0f,
+                0.5f,0.5f,0.5f,1f,
+                -10f,-10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -15f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -15f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                -5f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -15f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -5f,-5f,0f,
+                0.5f,0.5f,0.5f,1f,
+                -5f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                //
+                5f,-5f,0f,
+                1f, 1f, 1f, 1f,
+                10f,-10f,0f,
+                1f, 0f, 0f,1f,
+                15f,-5f,0f,
+                1f, 1f, 1f, 1f,
+
+                5f,-5f,10f,
+                0.2f,0.2f,0.2f,1f,
+                10f,-10f,10f,
+                0.2f,0.2f,0.2f,1f,
+                15f,-5f,10f,
+                0.2f,0.2f,0.2f,1f,
+
+                5f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                5f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                10f,-10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                5f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                10f,-10f,0f,
+                0.5f,0.5f,0.5f,1f,
+                10f,-10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                15f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                15f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                10f,-10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                15f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                10f,-10f,0f,
+                0.5f,0.5f,0.5f,1f,
+                10f,-10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                15f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                15f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                5f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                15f,-5f,0,
+                0.5f,0.5f,0.5f,1f,
+                5f,-5f,0f,
+                0.5f,0.5f,0.5f,1f,
+                5f,-5f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                //
+                //
+                -5f,5f,0f,
+                1f, 1f, 1f, 1f,
+                -10f,10f,0f,
+                1f, 0f, 0f,1f,
+                -15f,5f,0f,
+                1f, 1f, 1f, 1f,
+
+                -5f,5f,10f,
+                0.2f,0.2f,0.2f,1f,
+                -10f,10f,10f,
+                0.2f,0.2f,0.2f,1f,
+                -15f,5f,10f,
+                0.2f,0.2f,0.2f,1f,
+
+                -5f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -5f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                -10f,10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -5f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -10f,10f,0f,
+                0.5f,0.5f,0.5f,1f,
+                -10f,10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -15f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -15f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                -10f,10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -15f,5f,0,
+                0.5f,0.5f,0.5f,1f,
+                -10f,10f,0f,
+                0.5f,0.5f,0.5f,1f,
+                -10f,10f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -15f,5f,0f,
+                0.5f,0.5f,0.5f,1f,
+                -15f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+                -5f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                -15f,5f,0f,
+                0.5f,0.5f,0.5f,1f,
+                -5f,5f,0f,
+                0.5f,0.5f,0.5f,1f,
+                -5f,5f,10f,
+                0.5f,0.5f,0.5f,1f,
+
+                // gray road
+                -5,50,0,
+                0.5f,0.5f,0.5f,1f,
+                4,-50,0,
+                0.5f,0.5f,0.5f,1f,
+                4,50,0,
+                0.5f,0.5f,0.5f,1f,
+
+                -5,50,0,
+                0.5f,0.5f,0.5f,1f,
+                4,-50,0,
+                0.5f,0.5f,0.5f,1f,
+                -4,-50,0,
+                0.5f,0.5f,0.5f,1f,
+
+                //
+                -50,4,0,
+                0.5f,0.5f,0.5f,1f,
+                -50,-4,0,
+                0.5f,0.5f,0.5f,1f,
+                50,-4,0,
+                0.5f,0.5f,0.5f,1f,
+
+                50,-4,0,
+                0.5f,0.5f,0.5f,1f,
+                50,4,0,
+                0.5f,0.5f,0.5f,1f,
+                -50,4,0,
+                0.5f,0.5f,0.5f,1f,
+
+                //длинная херня
+                20,-7,0,
+                0.2f,0.2f,0.2f,1f,
+                50,-7,0,
+                0.2f,0.2f,0.2f,1f,
+                50,-20,0,
+                0.2f,0.2f,0.2f,1f,
+
+                50,-20,0,
+                0.2f,0.2f,0.2f,1f,
+                20,-7,0,
+                0.2f,0.2f,0.2f,1f,
+                20,-20,0,
+                0.2f,0.2f,0.2f,1f,
+
+                20,-7,10,
+                0.2f,0.2f,0.2f,1f,
+                50,-7,10,
+                0.2f,0.2f,0.2f,1f,
+                50,-20,10,
+                0.2f,0.2f,0.2f,1f,
+
+                50,-20,10,
+                0.2f,0.2f,0.2f,1f,
+                20,-7,10,
+                0.2f,0.2f,0.2f,1f,
+                20,-20,10,
+                0.2f,0.2f,0.2f,1f,
+
+                50,-20,10,
+                0.5f,0.5f,0.5f,1f,
+                50,-20,0,
+                0.5f,0.5f,0.5f,1f,
+                20,-20,0,
+                0.5f,0.5f,0.5f,1f,
+
+                20,-20,10,
+                0.5f,0.5f,0.5f,1f,
+                20,-20,0,
+                0.5f,0.5f,0.5f,1f,
+                50,-20,10,
+                0.5f,0.5f,0.5f,1f,
+
+                20,-7,0,
+                0.5f,0.5f,0.5f,1f,
+                20,-7,10,
+                0.5f,0.5f,0.5f,1f,
+                50,-7,0,
+                0.5f,0.5f,0.5f,1f,
+
+                20,-7,10,
+                0.5f,0.5f,0.5f,1f,
+                50,-7,10,
+                0.5f,0.5f,0.5f,1f,
+                50,-7,0,
+                0.5f,0.5f,0.5f,1f,
+
+                20,-7,0,
+                0.5f,0.5f,0.5f,1f,
+                20,-7,10,
+                0.5f,0.5f,0.5f,1f,
+                20,-20,0,
+                0.5f,0.5f,0.5f,1f,
+
+                20,-20,10,
+                0.5f,0.5f,0.5f,1f,
+                20,-20,0,
+                0.5f,0.5f,0.5f,1f,
+                20,-7,10,
+                0.5f,0.5f,0.5f,1f,
+
+                50,-20,10,
+                0.5f,0.5f,0.5f,1f,
+                50,-20,0,
+                0.5f,0.5f,0.5f,1f,
+                50,-7,10,
+                0.5f,0.5f,0.5f,1f,
+
+                50,-7,10,
+                0.5f,0.5f,0.5f,1f,
+                50,-7,0,
+                0.5f,0.5f,0.5f,1f,
+                50,-20,0,
+                0.5f,0.5f,0.5f,1f,
+
         };
 
-        float[] vertix = readFile.read_file();
+        float [] vertices = {
+
+        };
+
+        Log.w("E", String.valueOf(test.length));
+        Log.w("E", String.valueOf(test.length / 2));
+        //float[] vertix = readFile.read_file();
 
         test_vertices = ByteBuffer.allocateDirect(test.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         test_vertices.put(test).position(0);
-
-        verticesReady = ByteBuffer.allocateDirect(vertix.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
-        verticesReady.put(vertix).position(0);
+//
+//        verticesReady = ByteBuffer.allocateDirect(vertices.length * mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
+//        verticesReady.put(vertices).position(0);
+//
     }
 
     @Override
@@ -178,9 +519,12 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 glUnused) {
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
         GLES20.glUseProgram(colored_vertices_program_handle);
+
         GLES20.glUniformMatrix4fv(MVPmatrix_location, 1, false,camera.getViewProjectionMatrix().values, 0);
-        drawColoredPoints(verticesReady, GLES20.GL_TRIANGLES, 0,30);
-        drawColoredPoints(test_vertices, GLES20.GL_TRIANGLES, 0,3);
+
+        //drawColoredPoints(verticesReady, GLES20.GL_TRIANGLES, 0,30);
+
+        drawColoredPoints(test_vertices, GLES20.GL_TRIANGLES, 0,145);
 
 //        if(!one_time) {
 //            Log.w("F",camera.getViewProjectionMatrix().debug());

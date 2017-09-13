@@ -41,6 +41,8 @@ public class LocationAdress {
                         sb.append(address.getLocality()).append("\n");
                         //sb.append(address.getPostalCode()).append("\n");
                         //sb.append(address.getCountryName());
+
+                        //Определение города
                         result = sb.toString();
                         Log.w("W","RESULT = " + result);
                     }
