@@ -41,7 +41,7 @@ public class ReadFile {
 
         catch (FileNotFoundException e) {
             //e.printStackTrace();
-            Log.w("W", "ФАЙЛ НЕ НАЙДЕН 2");
+            Log.w("W", "ФАЙЛ НЕ НАЙДЕН");
         }
 
         //стринг билдер = файлу

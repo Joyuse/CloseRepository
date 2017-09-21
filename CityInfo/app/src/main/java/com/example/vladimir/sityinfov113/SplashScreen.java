@@ -80,6 +80,7 @@ public class SplashScreen extends Activity implements LocationListener {
                     break;
                 default:
                     locationAdress = null;
+                    showSettingsAlert();
             }
             Log.e("E", "LOCATION ADRESS = " + locationAdress);
         }

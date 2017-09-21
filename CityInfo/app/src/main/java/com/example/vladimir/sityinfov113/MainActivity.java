@@ -20,11 +20,12 @@ public class MainActivity extends Activity {
     private OpenGLSurfaceView glSurfaceView;
     NavigationView navigation_view;
     final float ratio = 0.25f;
+    //Главная функция
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //проверка на первыйзапуск
+        //проверка на первый запуск
         SharedPreferences first_start_app = getPreferences(MODE_PRIVATE);
         if(first_start_app.getBoolean("isFirstRun", true)){
             Intent load_file_activity = new Intent(getApplicationContext(), Load_file_activity.class);

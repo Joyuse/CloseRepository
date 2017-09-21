@@ -12,12 +12,10 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-
 public class OpenGLSurfaceView extends GLSurfaceView implements View.OnClickListener {
 
     private GestureDetector move_gesture;
     private MoveListener move_listener;
-
     OpenGLProjectRenderer renderer;
 
     //специально для углов
@@ -31,6 +29,7 @@ public class OpenGLSurfaceView extends GLSurfaceView implements View.OnClickList
     @Override
     public void setRenderer(Renderer r){
         super.setRenderer(r);
+        super.setRenderMode(RENDERMODE_CONTINUOUSLY);
         this.renderer = (OpenGLProjectRenderer)r;
         move_gesture = new GestureDetector(this.getContext(),move_listener = new MoveListener(renderer.camera));
     }
@@ -50,6 +49,4 @@ public class OpenGLSurfaceView extends GLSurfaceView implements View.OnClickList
     public void onClick(View view) {
         Log.w("event","onClick " + view);
     }
-
-
 }
