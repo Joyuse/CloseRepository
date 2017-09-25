@@ -18,7 +18,7 @@ public class ReadFile {
 
     public float[] read_file() {
         float [] mass_vertices = new float[0];
-        String fileName = "loaded_file";
+        String fileName = "city.model";
         StringBuilder stringBuilder = null;
         Log.w("W", "СЧИТЫВАЕМ ФАЙЛ");
 
@@ -32,6 +32,7 @@ public class ReadFile {
             try {
                 while ((line = bufferedReader.readLine()) != null) {
                     stringBuilder.append(line);
+                    Log.w("W","ADD STRING IN FILE");
                 }
             }
             catch (IOException e) {
@@ -45,7 +46,9 @@ public class ReadFile {
         }
 
         //стринг билдер = файлу
-        stringBuilder.toString();
+        Log.w("W", "stringbuilder = " + stringBuilder);
+
+        //stringBuilder.toString();
         Log.w("W", "stringbuilder = " + stringBuilder);
         //заносим каждый элемент в массив после запятой EZ
         String[] test_line_string = stringBuilder.toString().split(",");

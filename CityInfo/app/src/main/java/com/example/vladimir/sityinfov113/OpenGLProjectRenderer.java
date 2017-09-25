@@ -158,7 +158,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 20,-7,10,
                 0.5f,0.5f,0.5f,1f,
 
-
                 50,-20,10,
                 0.5f,0.5f,0.5f,1f,
                 50,-20,0,
@@ -196,7 +195,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 0.2f,0.2f,0.2f,1f,
                 50,20,0,
                 0.2f,0.2f,0.2f,1f,
-
 
 //Исправленно
                 20,20,0,
@@ -601,8 +599,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 -10,35,0,
                 0.5f,0.5f,0.5f,1f,
 
-
-
 //Исправленно
                 //
                 -10,13,0,
@@ -618,7 +614,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 0.5f,0.5f,0.5f,1f,
                 -10,13,0,
                 0.5f,0.5f,0.5f,1f,
-
 
 //Исправленно
                 //
@@ -636,8 +631,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 -10,13,100,
                 0.5f,0.5f,0.5f,1f,
 
-
-
 //Исправленно
                 //
 
@@ -654,7 +647,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 0.5f,0.5f,0.5f,1f,
                 -25,13,100,
                 0.5f,0.5f,0.5f,1f,
-
 
 //Исправленно
                 //
@@ -845,7 +837,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 -50,-50,20,
                 0.5f,0.5f,0.5f,1f,
 
-
                 -50,-50,20,
                 0.5f,0.5f,0.5f,1f,
                 -50,-50,0,
@@ -1016,7 +1007,6 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
 
 //Исправленно
                 //
-
                 7,15,15,
                 0.5f,0.5f,0.5f,1f,
                 7,15,0,
@@ -1128,13 +1118,10 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
                 0.5f,0.5f,0.5f,1f,
         };
 
-        float [] vertices = {
-
-        };
-
         Log.w("E", String.valueOf(test.length));
         Log.w("E", String.valueOf(test.length / 2));
-        //float[] vertix = readFile.read_file();
+
+        float[] vertix = readFile.read_file();
 
         test_vertices = ByteBuffer.allocateDirect(test.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         test_vertices.put(test).position(0);
@@ -1243,7 +1230,7 @@ public class OpenGLProjectRenderer implements GLSurfaceView.Renderer {
         mColorHandle = GLES20.glGetAttribLocation(colored_vertices_program_handle, "a_Color");
 
         GLES20.glEnable(GLES20.GL_CULL_FACE);
-        GLES20.glCullFace(GLES20.GL_BACK); //отключение прорисовки  "за" домом
+        GLES20.glCullFace(GLES20.GL_FRONT); //отключение прорисовки  "за" домом
         GLES20.glFrontFace(GLES20.GL_CW);//по часовой
     }
 

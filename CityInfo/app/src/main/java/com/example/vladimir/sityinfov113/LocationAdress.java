@@ -49,12 +49,16 @@ public class LocationAdress {
                 } finally {
                     Message message = Message.obtain();
                     message.setTarget(handler);
+                    Log.w("RE","result = " + result);
                     if (result != null) {
                         message.what = 1;
                         Bundle bundle = new Bundle();
-                        result = "Latitude: " + latitude + " Longitude: " + longitude +
-                                "\n\nAddress:\n" + result;
-                        bundle.putString("ADRESS", result);
+                        //result = "Latitude: " + latitude + " Longitude: " + longitude + "\nAddress: " + result;
+                        String result1;
+                        result1 = result;
+                        //bundle.putString("ADRESS", result);
+                        bundle.putString("ADRESS",result1);
+                        Log.w("RES", "RESULT PUT STRING = " + result1);
                         message.setData(bundle);
                     } else {
                         message.what = 1;
@@ -63,6 +67,7 @@ public class LocationAdress {
                                 "\n Unable to get address for this lat-long.";
                         bundle.putString("address", result);
                         message.setData(bundle);
+                        Log.w("W","WWWWWWWW RESULT = " + result);
                     }
                     message.sendToTarget();
                 }

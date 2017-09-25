@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -27,7 +28,6 @@ public class SplashScreen extends Activity implements LocationListener {
     String provider;
     double latitude;
     double longitude;
-    LocationAdress locationAdress = new LocationAdress();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,19 @@ public class SplashScreen extends Activity implements LocationListener {
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 
+        //Проверка на первый запуск
+        SharedPreferences first_start_app = getPreferences(MODE_PRIVATE);
+        if(first_start_app.getBoolean("isFirstRun", true)){
+            Log.e("E","FIRST RUN");
+        //    LocationAdress.getAddressFromLocation(latitude,longitude,getApplicationContext(),new GeocoderHandler());
+        }
+
+        else {
+            Intent complete_download_start_activity_main = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(complete_download_start_activity_main);
+            Log.e("E","NOT FIRST RUN");
+        }
+        first_start_app.edit().putBoolean("isFirstRun",false).apply();
         //прочая штука
 
         //StartAnimations();
@@ -51,7 +64,7 @@ public class SplashScreen extends Activity implements LocationListener {
         longitude = location.getLongitude();
         Log.e("Latitude", "Latitude = " + latitude);
         Log.e("Longitude", "Longitude = " + longitude);
-        LocationAdress.getAddressFromLocation(latitude,longitude,getApplicationContext(),new GeocoderHandler());
+        //LocationAdress.getAddressFromLocation(latitude,longitude,getApplicationContext(),new GeocoderHandler());
     }
 
     @Override
@@ -76,13 +89,21 @@ public class SplashScreen extends Activity implements LocationListener {
             switch (message.what) {
                 case 1:
                     Bundle bundle = message.getData();
-                    locationAdress = bundle.getString("address");
+                    locationAdress = bundle.getString("ADRESS");
                     break;
                 default:
                     locationAdress = null;
                     showSettingsAlert();
             }
             Log.e("E", "LOCATION ADRESS = " + locationAdress);
+            if (locationAdress == "Томск") {
+                Log.w("return false", "false return");
+            }
+            else {
+                Log.w("Nadpis", "Kot'ya JOPA");
+                Intent load_file_activity = new Intent(getApplicationContext(), Load_file_activity.class);
+                startActivity(load_file_activity);
+            }
         }
     }
 

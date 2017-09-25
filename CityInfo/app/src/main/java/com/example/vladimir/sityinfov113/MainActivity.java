@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ConfigurationInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,9 +23,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+/*
         //проверка на первый запуск
         SharedPreferences first_start_app = getPreferences(MODE_PRIVATE);
+
         if(first_start_app.getBoolean("isFirstRun", true)){
             Intent load_file_activity = new Intent(getApplicationContext(), Load_file_activity.class);
             startActivity(load_file_activity);
@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
             Log.e("E","NOT FIRST RUN");
         }
         first_start_app.edit().putBoolean("isFirstRun",false).apply();
+*/
 
         //Проверяем поддерживается ли OpenGL ES 2.0.
         final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
